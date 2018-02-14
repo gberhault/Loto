@@ -9,8 +9,6 @@ import org.junit.Test;
  * Created by berhagu1 on 2/13/2018.
  */
 public class CartonTest {
-
-
     private final int rowNumber = 3;
     private final int columnNumber = 9;
     private Carton carton;
@@ -70,35 +68,35 @@ public class CartonTest {
     }
 
     private void fillCarton() {
-        carton.addToRow(1, 1);
-        carton.addToRow(1, 11);
-        carton.addToRow(1, 21);
-        carton.addToRow(1, 31);
-        carton.addToRow(1, 41);
-        carton.addToRow(1, 51);
-        carton.addToRow(1, 61);
-        carton.addToRow(1, 71);
-        carton.addToRow(1, 81);
+        carton.addToRow(0, 1);
+        carton.addToRow(0, 11);
+        carton.addToRow(0, 21);
+        carton.addToRow(0, 31);
+        carton.addToRow(0, 41);
+        carton.addToRow(0, 51);
+        carton.addToRow(0, 61);
+        carton.addToRow(0, 71);
+        carton.addToRow(0, 81);
 
-        carton.addToRow(2, 2);
-        carton.addToRow(2, 12);
-        carton.addToRow(2, 22);
-        carton.addToRow(2, 32);
-        carton.addToRow(2, 42);
-        carton.addToRow(2, 52);
-        carton.addToRow(2, 62);
-        carton.addToRow(2, 72);
-        carton.addToRow(2, 82);
+        carton.addToRow(1, 2);
+        carton.addToRow(1, 12);
+        carton.addToRow(1, 22);
+        carton.addToRow(1, 32);
+        carton.addToRow(1, 42);
+        carton.addToRow(1, 52);
+        carton.addToRow(1, 62);
+        carton.addToRow(1, 72);
+        carton.addToRow(1, 82);
 
-        carton.addToRow(3, 3);
-        carton.addToRow(3, 13);
-        carton.addToRow(3, 23);
-        carton.addToRow(3, 33);
-        carton.addToRow(3, 43);
-        carton.addToRow(3, 53);
-        carton.addToRow(3, 63);
-        carton.addToRow(3, 73);
-        carton.addToRow(3, 83);
+        carton.addToRow(2, 3);
+        carton.addToRow(2, 13);
+        carton.addToRow(2, 23);
+        carton.addToRow(2, 33);
+        carton.addToRow(2, 43);
+        carton.addToRow(2, 53);
+        carton.addToRow(2, 63);
+        carton.addToRow(2, 73);
+        carton.addToRow(2, 83);
     }
 
 }
