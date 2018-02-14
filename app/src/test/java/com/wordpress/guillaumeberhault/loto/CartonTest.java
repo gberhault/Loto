@@ -90,6 +90,8 @@ public class CartonTest {
                 Assert.assertEquals((j-1)*10+i, carton.getValueInRow(i,j));
             }
         }
+
+        carton.display();
     }
 
     @Test(expected = RuntimeException.class)

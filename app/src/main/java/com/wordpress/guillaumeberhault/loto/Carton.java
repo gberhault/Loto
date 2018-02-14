@@ -210,4 +210,14 @@ public class Carton {
         else
             return 9;
     }
+
+    public void display(){
+        for (int i=1; i<=3; i++){
+            System.out.print("|");
+            for (int j=1; j<10; j++){
+                System.out.print(String.valueOf(this.getValueInRow(i,j))+"|");
+            }
+            System.out.println();
+        }
+    }
 }
