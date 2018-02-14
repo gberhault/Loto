@@ -17,14 +17,13 @@ public class Carton {
         this.columnNumber = columnNumber;
         this.rows = new Vector<>(rowNumber);
 
-        for (int i = 0; i < rowNumber; i++){
+        for (int i = 0; i < rowNumber; i++) {
             Row element = new Row(columnNumber);
             rows.add(element);
         }
     }
 
     /**
-     *
      * @param rowIndex from 1 to max.
      * @param value
      */
@@ -34,14 +33,14 @@ public class Carton {
         if (value < 0 || value > 89)
             throw new RuntimeException("0 < value < 89");
 
-        rows.get(rowIndex-1).setColumnValue(value);
+        rows.get(rowIndex - 1).setColumnValue(value);
     }
 
     public int getValueInRow(int rowIndex, int columnIndex) {
         if (rowIndex < 0)
             throw new RuntimeException("Row index => 0");
         if (columnIndex < 0 || columnIndex >= columnNumber)
-            throw new RuntimeException("0 <= Column Index < "+String.valueOf(columnNumber));
+            throw new RuntimeException("0 <= Column Index < " + String.valueOf(columnNumber));
 
         return rows.get(rowIndex).getColumnValue(columnIndex);
     }

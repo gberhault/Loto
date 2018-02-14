@@ -23,10 +23,6 @@ class Row {
         return columns.get(columnIndex);
     }
 
-    public void setColumnValue(int columnIndex, int value) {
-        columns.set(columnIndex, value);
-    }
-
     public void setColumnValue(int value) {
         columns.set(whichColumn(value), value);
     }

@@ -63,7 +63,7 @@ public class CartonTest {
 
         for (int i = 0; i < rowNumber; i++) {
             for (int j = 0; j < columnNumber; j++) {
-                Assert.assertEquals(j * 10 + i+1, carton.getValueInRow(i, j));
+                Assert.assertEquals(j * 10 + i + 1, carton.getValueInRow(i, j));
             }
         }
 
