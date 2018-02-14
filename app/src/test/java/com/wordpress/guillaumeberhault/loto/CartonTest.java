@@ -11,26 +11,28 @@ import org.junit.Test;
 public class CartonTest {
 
 
+    private final int rowNumber = 3;
+    private final int columnNumber = 9;
     private Carton carton;
 
     @Before
     public void setUp() throws Exception {
-        carton = new Carton();
+        carton = new Carton(3, 9);
     }
 
     @Test(expected = RuntimeException.class)
     public void getValueInRow_wrongColumnIndex_small_RuntimeException() throws Exception {
-        carton.getValueInRow(1, 0);
+        carton.getValueInRow(1, -1);
     }
 
     @Test(expected = RuntimeException.class)
     public void getValueInRow_wrongColumnIndex_overflow_RuntimeException() throws Exception {
-        carton.getValueInRow(1, 10);
+        carton.getValueInRow(1, 9);
     }
 
     @Test(expected = RuntimeException.class)
     public void getValueInRow_wrongRowIndex_overflow_RuntimeException() throws Exception {
-        carton.getValueInRow(0, 5);
+        carton.getValueInRow(-1, 5);
     }
 
     @Test(expected = RuntimeException.class)
@@ -54,7 +56,20 @@ public class CartonTest {
     }
 
     @Test
-    public void addToRow_Ligne1() throws Exception {
+    public void addToRow() throws Exception {
+        fillCarton();
+
+        carton.display();
+
+        for (int i = 0; i < rowNumber; i++) {
+            for (int j = 0; j < columnNumber; j++) {
+                Assert.assertEquals(j * 10 + i+1, carton.getValueInRow(i, j));
+            }
+        }
+
+    }
+
+    private void fillCarton() {
         carton.addToRow(1, 1);
         carton.addToRow(1, 11);
         carton.addToRow(1, 21);
@@ -84,69 +99,6 @@ public class CartonTest {
         carton.addToRow(3, 63);
         carton.addToRow(3, 73);
         carton.addToRow(3, 83);
-
-        for (int i=1; i<=3; i++){
-            for (int j=1; j<10; j++){
-                Assert.assertEquals((j-1)*10+i, carton.getValueInRow(i,j));
-            }
-        }
-
-        carton.display();
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void whichColumn_underflow_runtimeException() throws Exception {
-        carton.whichColumn(0);
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void whichColumn_overflow_runtimeException() throws Exception {
-        carton.whichColumn(90);
-    }
-
-    @Test
-    public void whichColumn_unite() throws Exception {
-        Assert.assertEquals(1, carton.whichColumn(5));
-    }
-
-    @Test
-    public void whichColumn_10() throws Exception {
-        Assert.assertEquals(2, carton.whichColumn(10));
-    }
-
-    @Test
-    public void whichColumn_20() throws Exception {
-        Assert.assertEquals(3, carton.whichColumn(20));
-    }
-
-    @Test
-    public void whichColumn_30() throws Exception {
-        Assert.assertEquals(4, carton.whichColumn(30));
-    }
-
-    @Test
-    public void whichColumn_40() throws Exception {
-        Assert.assertEquals(5, carton.whichColumn(40));
-    }
-
-    @Test
-    public void whichColumn_50() throws Exception {
-        Assert.assertEquals(6, carton.whichColumn(50));
-    }
-
-    @Test
-    public void whichColumn_60() throws Exception {
-        Assert.assertEquals(7, carton.whichColumn(60));
-    }
-
-    @Test
-    public void whichColumn_70() throws Exception {
-        Assert.assertEquals(8, carton.whichColumn(70));
-    }
-
-    @Test
-    public void whichColumn_80() throws Exception {
-        Assert.assertEquals(9, carton.whichColumn(80));
     }
 
 }
