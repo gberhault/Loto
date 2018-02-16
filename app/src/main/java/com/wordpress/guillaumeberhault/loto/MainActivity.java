@@ -13,6 +13,8 @@ public class MainActivity extends AppCompatActivity {
     EditText c11, c12, c13, c14, c15, c16, c17, c18, c19, c21, c22, c23, c24, c25, c26, c27, c28, c29, c31, c32, c33, c34, c35, c36, c37, c38, c39;
     Vector<Vector<EditText>> inputCarton;
 
+    Button b1,b2,b3,b4,b5,b6,b7,b8,b9,b10;
+
     Button validate;
 
     Carton carton;
@@ -28,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         id = new View[3][9];
 
         initializeIDsCarton();
+
+        initializeButtons();
 
         for (int i = 0; i < 3; i++) {
             inputCarton.add(new Vector<EditText>());
@@ -53,6 +57,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void initializeButtons() {
+        b1 = (Button) findViewById(R.id.b1);
+        b2 = (Button) findViewById(R.id.b2);
+        b3 = (Button) findViewById(R.id.b3);
+        b4 = (Button) findViewById(R.id.b4);
+        b5 = (Button) findViewById(R.id.b5);
+        b6 = (Button) findViewById(R.id.b6);
+        b7 = (Button) findViewById(R.id.b7);
+        b8 = (Button) findViewById(R.id.b8);
+        b9 = (Button) findViewById(R.id.b9);
+        b10 = (Button) findViewById(R.id.b10);
     }
 
     private void initializeIDsCarton() {
