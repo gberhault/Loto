@@ -1,37 +1,84 @@
 package com.wordpress.guillaumeberhault.loto;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText c11, c12, c13, c14, c15, c16, c17, c18, c19, c21, c22, c23, c24, c25, c26, c27, c28, c29, c31, c32, c33, c34, c35, c36, c37, c38, c39;
+    Vector<Vector<EditText>> cartonInputMatrix;
     Vector<Vector<EditText>> inputCarton;
 
-    Button b1,b2,b3,b4,b5,b6,b7,b8,b9,b10;
+    Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b10;
 
     Button validate;
 
     Carton carton;
+
+    private int rowNumber, columnNumber;
+
+
     private View[][] id;
+    private LinearLayout linearLayout;
+    private ConstraintLayout rootLayout;
+    private TableLayout tableLayout;
+    private Vector<TableRow> tableRows;
+    private Button b_validate;
+    private Vector<Integer> drawnNumbers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        setContentView(R.layout.activity_main_prog);
+//
+//        rowNumber = 3;
+//        columnNumber = 9;
+//
+//        // Linear Layout
+//        rootLayout = findViewById(R.id.activity_main_prog_rootlayout);
+//        linearLayout = new LinearLayout(this);
+//        linearLayout.setLayoutParams(new LinearLayout.LayoutParams(rootLayout.getWidth(),rootLayout.getHeight()));
+//        linearLayout.setOrientation(LinearLayout.VERTICAL);
+//
+//        // Input with table
+//        tableLayout = new TableLayout(this);
+//        tableRows = new Vector<>();
+//        cartonInputMatrix = new Vector<>();
+//        for (int i = 0; i < rowNumber; i++) {
+//            tableRows.add(new TableRow(this));
+//            cartonInputMatrix.add(new Vector<EditText>());
+//            for (int j = 0; j < columnNumber; j++) {
+//                cartonInputMatrix.get(i).add(new EditText(this));
+//                cartonInputMatrix.get(i).get(j).setWidth(0);
+//                tableRows.get(i).addView(cartonInputMatrix.get(i).get(j));
+//            }
+//            tableLayout.addView(tableRows.get(i));
+//        }
+//
+//        linearLayout.addView(tableLayout);
+//
+//
+//        b_validate = new Button(this);
+//        b_validate.setText("Validate");
+//        linearLayout.addView(b_validate);
+//
+//        rootLayout.addView(linearLayout);
 
         carton = new Carton(3, 9);
         inputCarton = new Vector<>();
         id = new View[3][9];
 
         initializeIDsCarton();
-
-        initializeButtons();
 
         for (int i = 0; i < 3; i++) {
             inputCarton.add(new Vector<EditText>());
@@ -59,17 +106,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void initializeButtons() {
-        b1 = (Button) findViewById(R.id.b1);
-        b2 = (Button) findViewById(R.id.b2);
-        b3 = (Button) findViewById(R.id.b3);
-        b4 = (Button) findViewById(R.id.b4);
-        b5 = (Button) findViewById(R.id.b5);
-        b6 = (Button) findViewById(R.id.b6);
-        b7 = (Button) findViewById(R.id.b7);
-        b8 = (Button) findViewById(R.id.b8);
-        b9 = (Button) findViewById(R.id.b9);
-        b10 = (Button) findViewById(R.id.b10);
+    public void addOrRemoveDrawnNumbers(View v) {
+        if (drawnNumbers == null)
+            drawnNumbers = new Vector<>();
+
+        Button b = (Button) v;
+        Integer valueToAddOrRemove = Integer.valueOf(b.getText().toString());
+        if (drawnNumbers.contains(valueToAddOrRemove)) {
+            drawnNumbers.remove(valueToAddOrRemove);
+            b.setBackgroundColor(android.R.drawable.btn_default);
+            System.out.println("Remove number " + b.getText().toString());
+        } else {
+            drawnNumbers.add(valueToAddOrRemove);
+            b.setBackgroundColor(Color.YELLOW);
+            System.out.println("Add number " + b.getText().toString());
+        }
     }
 
     private void initializeIDsCarton() {
