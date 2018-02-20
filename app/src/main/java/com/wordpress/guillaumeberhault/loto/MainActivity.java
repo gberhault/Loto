@@ -90,11 +90,14 @@ public class MainActivity extends AppCompatActivity {
 
         Button b = (Button) v;
         Integer valueToAddOrRemove = Integer.valueOf(b.getText().toString());
+        // Already drawn. Remove it.
         if (drawnNumbers.contains(valueToAddOrRemove)) {
             drawnNumbers.remove(valueToAddOrRemove);
+            b.setTextColor(Color.BLACK);
             System.out.println("Remove number " + b.getText().toString());
         } else {
             drawnNumbers.add(valueToAddOrRemove);
+            b.setTextColor(Color.RED);
             System.out.println("Add number " + b.getText().toString());
         }
     }
