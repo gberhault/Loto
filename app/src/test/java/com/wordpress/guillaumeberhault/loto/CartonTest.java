@@ -5,10 +5,13 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Vector;
+
 /**
  * Created by berhagu1 on 2/13/2018.
  */
 public class CartonTest {
+
     private final int rowNumber = 3;
     private final int columnNumber = 9;
     private Carton carton;
@@ -16,6 +19,109 @@ public class CartonTest {
     @Before
     public void setUp() throws Exception {
         carton = new Carton(3, 9);
+    }
+
+    @Test
+    public void clear() throws Exception {
+        fillCarton();
+        for (int i = 0; i < rowNumber; i++) {
+            for (int j = 0; j < columnNumber; j++) {
+                Assert.assertEquals(j*10+i+1, carton.getValueInRow(i, j));
+            }
+        }
+
+        carton.clear();
+        for (int i = 0; i < rowNumber; i++) {
+            for (int j = 0; j < columnNumber; j++) {
+                Assert.assertEquals(-1, carton.getValueInRow(i, j));
+            }
+        }
+    }
+
+    @Test
+    public void checkDrawnNumbers_nothing() throws Exception {
+        fillCartonRealExample();
+        Assert.assertEquals(Carton.status.nothing, carton.checkDrawnNumbers(new Vector<Integer>()));
+    }
+
+    @Test
+    public void checkDrawnNumbers_1rowComplete() throws Exception {
+        fillCartonRealExample();
+        Vector<Integer> drawnNumbers = new Vector<>();
+
+        drawnNumbers.add(9);
+        drawnNumbers.add(17);
+        drawnNumbers.add(47);
+        drawnNumbers.add(50);
+        drawnNumbers.add(88);
+
+        Assert.assertEquals(Carton.status.oneRowComplete, carton.checkDrawnNumbers(drawnNumbers));
+    }
+
+    @Test
+    public void checkDrawnNumbers_2RowsComplete() throws Exception {
+        fillCartonRealExample();
+        Vector<Integer> drawnNumbers = new Vector<>();
+
+        drawnNumbers.add(9);
+        drawnNumbers.add(17);
+        drawnNumbers.add(47);
+        drawnNumbers.add(50);
+        drawnNumbers.add(88);
+
+        drawnNumbers.add(22);
+        drawnNumbers.add(38);
+        drawnNumbers.add(68);
+        drawnNumbers.add(73);
+        drawnNumbers.add(83);
+
+        Assert.assertEquals(Carton.status.twoRowsComplete, carton.checkDrawnNumbers(drawnNumbers));
+    }
+
+    @Test
+    public void checkDrawnNumbers_cartonComplete() throws Exception {
+        fillCartonRealExample();
+        Vector<Integer> drawnNumbers = new Vector<>();
+
+        drawnNumbers.add(9);
+        drawnNumbers.add(17);
+        drawnNumbers.add(47);
+        drawnNumbers.add(50);
+        drawnNumbers.add(88);
+
+        drawnNumbers.add(22);
+        drawnNumbers.add(38);
+        drawnNumbers.add(68);
+        drawnNumbers.add(73);
+        drawnNumbers.add(83);
+
+        drawnNumbers.add(3);
+        drawnNumbers.add(10);
+        drawnNumbers.add(35);
+        drawnNumbers.add(46);
+        drawnNumbers.add(65);
+
+        Assert.assertEquals(Carton.status.cartonComplete, carton.checkDrawnNumbers(drawnNumbers));
+    }
+
+    private void fillCartonRealExample() {
+        carton.addToRow(0, 9);
+        carton.addToRow(0, 17);
+        carton.addToRow(0, 47);
+        carton.addToRow(0, 50);
+        carton.addToRow(0, 88);
+
+        carton.addToRow(1, 22);
+        carton.addToRow(1, 38);
+        carton.addToRow(1, 68);
+        carton.addToRow(1, 73);
+        carton.addToRow(1, 83);
+
+        carton.addToRow(2, 3);
+        carton.addToRow(2, 10);
+        carton.addToRow(2, 35);
+        carton.addToRow(2, 46);
+        carton.addToRow(2, 65);
     }
 
     @Test(expected = RuntimeException.class)

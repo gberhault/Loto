@@ -1,5 +1,6 @@
 package com.wordpress.guillaumeberhault.loto;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -10,13 +11,16 @@ import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText c11, c12, c13, c14, c15, c16, c17, c18, c19, c21, c22, c23, c24, c25, c26, c27, c28, c29, c31, c32, c33, c34, c35, c36, c37, c38, c39;
-    Vector<Vector<EditText>> inputCarton;
+    Vector<Vector<EditText>> cartonInputMatrix;
 
     Button validate;
 
     Carton carton;
+
+    private int rowNumber, columnNumber;
+
     private View[][] id;
+    private Vector<Integer> drawnNumbers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,15 +28,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         carton = new Carton(3, 9);
-        inputCarton = new Vector<>();
+        cartonInputMatrix = new Vector<>();
         id = new View[3][9];
 
         initializeIDsCarton();
 
         for (int i = 0; i < 3; i++) {
-            inputCarton.add(new Vector<EditText>());
+            cartonInputMatrix.add(new Vector<EditText>());
             for (int j = 0; j < 9; j++) {
-                inputCarton.get(i).add((EditText) id[i][j]);
+                cartonInputMatrix.get(i).add((EditText) id[i][j]);
             }
         }
 
@@ -41,18 +45,58 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 carton.display();
-                for (int i = 0; i < 3; i++) {
-                    for (int j = 0; j < 9; j++) {
-                        String currentValue = ((EditText) id[i][j]).getText().toString();
-                        if (!currentValue.isEmpty()) {
-                            carton.addToRow(i, Integer.valueOf(currentValue));
+
+                if (validate.getText().equals("Validate")) {
+                    validate.setText("Modify");
+
+                    for (int i = 0; i < 3; i++) {
+                        for (int j = 0; j < 9; j++) {
+                            String currentValue = ((EditText) id[i][j]).getText().toString();
+                            if (!currentValue.isEmpty()) {
+                                carton.addToRow(i, Integer.valueOf(currentValue));
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < 3; i++) {
+                        for (int j = 0; j < 9; j++) {
+                            if (carton.getValueInRow(i, j) == -1) {
+                                cartonInputMatrix.get(i).get(j).setText("");
+                            } else {
+                                cartonInputMatrix.get(i).get(j).setText(String.valueOf(carton.getValueInRow(i, j)));
+                            }
+                            cartonInputMatrix.get(i).get(j).setEnabled(false);
+                        }
+                    }
+                } else {
+                    carton.clear();
+                    validate.setText("Validate");
+                    for (int i = 0; i < 3; i++) {
+                        for (int j = 0; j < 9; j++) {
+                            cartonInputMatrix.get(i).get(j).setEnabled(true);
                         }
                     }
                 }
+
                 carton.display();
             }
         });
 
+    }
+
+    public void addOrRemoveDrawnNumbers(View v) {
+        if (drawnNumbers == null)
+            drawnNumbers = new Vector<>();
+
+        Button b = (Button) v;
+        Integer valueToAddOrRemove = Integer.valueOf(b.getText().toString());
+        if (drawnNumbers.contains(valueToAddOrRemove)) {
+            drawnNumbers.remove(valueToAddOrRemove);
+            System.out.println("Remove number " + b.getText().toString());
+        } else {
+            drawnNumbers.add(valueToAddOrRemove);
+            System.out.println("Add number " + b.getText().toString());
+        }
     }
 
     private void initializeIDsCarton() {

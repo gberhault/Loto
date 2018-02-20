@@ -27,6 +27,10 @@ class Row {
         columns.set(whichColumn(value), value);
     }
 
+    public void set(int columnIndex, int value) {
+        columns.set(columnIndex, value);
+    }
+
     /**
      * @param value
      * @return column index from 0 to Max-1.
