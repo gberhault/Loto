@@ -11,6 +11,7 @@ import java.util.Vector;
  * Created by berhagu1 on 2/13/2018.
  */
 public class CartonTest {
+
     private final int rowNumber = 3;
     private final int columnNumber = 9;
     private Carton carton;
@@ -18,6 +19,23 @@ public class CartonTest {
     @Before
     public void setUp() throws Exception {
         carton = new Carton(3, 9);
+    }
+
+    @Test
+    public void clear() throws Exception {
+        fillCarton();
+        for (int i = 0; i < rowNumber; i++) {
+            for (int j = 0; j < columnNumber; j++) {
+                Assert.assertEquals(j*10+i+1, carton.getValueInRow(i, j));
+            }
+        }
+
+        carton.clear();
+        for (int i = 0; i < rowNumber; i++) {
+            for (int j = 0; j < columnNumber; j++) {
+                Assert.assertEquals(-1, carton.getValueInRow(i, j));
+            }
+        }
     }
 
     @Test

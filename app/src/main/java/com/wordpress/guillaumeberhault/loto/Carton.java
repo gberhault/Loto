@@ -8,7 +8,7 @@ import java.util.Vector;
 
 public class Carton {
 
-    private Vector<Row> rows;
+    private Vector<Row> rowVector;
 
     private int rowNumber, columnNumber;
 
@@ -20,9 +20,9 @@ public class Carton {
 
         int row0Status, row1Status, row2Status;
 
-        row0Status = isRowComplete(rows.get(0), drawnNumbersList);
-        row1Status = isRowComplete(rows.get(1), drawnNumbersList);
-        row2Status = isRowComplete(rows.get(2), drawnNumbersList);
+        row0Status = isRowComplete(rowVector.get(0), drawnNumbersList);
+        row1Status = isRowComplete(rowVector.get(1), drawnNumbersList);
+        row2Status = isRowComplete(rowVector.get(2), drawnNumbersList);
 
         if (row0Status + row1Status + row2Status == 0)
             return status.nothing;
@@ -61,11 +61,11 @@ public class Carton {
     public Carton(int rowNumber, int columnNumber) {
         this.rowNumber = rowNumber;
         this.columnNumber = columnNumber;
-        this.rows = new Vector<>(rowNumber);
+        this.rowVector = new Vector<>(rowNumber);
 
         for (int i = 0; i < rowNumber; i++) {
             Row element = new Row(columnNumber);
-            rows.add(element);
+            rowVector.add(element);
         }
     }
 
@@ -80,7 +80,7 @@ public class Carton {
         if (value < 0 || value > 89)
             throw new RuntimeException("0 < value < 89");
 
-        rows.get(rowIndex).setColumnValue(value);
+        rowVector.get(rowIndex).setColumnValue(value);
     }
 
     public int getValueInRow(int rowIndex, int columnIndex) {
@@ -89,7 +89,7 @@ public class Carton {
         if (columnIndex < 0 || columnIndex >= columnNumber)
             throw new RuntimeException("0 <= Column Index < " + String.valueOf(columnNumber));
 
-        return rows.get(rowIndex).getColumnValue(columnIndex);
+        return rowVector.get(rowIndex).getColumnValue(columnIndex);
     }
 
 
@@ -104,6 +104,14 @@ public class Carton {
                 }
             }
             System.out.println();
+        }
+    }
+
+    public void clear() {
+        for (int i = 0; i < rowNumber; i++) {
+            for (int j = 0; j < columnNumber; j++) {
+                rowVector.get(i).set(j, -1);
+            }
         }
     }
 }

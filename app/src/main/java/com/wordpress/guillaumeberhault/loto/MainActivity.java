@@ -2,23 +2,16 @@ package com.wordpress.guillaumeberhault.loto;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity {
 
     Vector<Vector<EditText>> cartonInputMatrix;
-    Vector<Vector<EditText>> inputCarton;
-
-    Button b1, b2, b3, b4, b5, b6, b7, b8, b9, b10;
 
     Button validate;
 
@@ -26,64 +19,24 @@ public class MainActivity extends AppCompatActivity {
 
     private int rowNumber, columnNumber;
 
-
     private View[][] id;
-    private LinearLayout linearLayout;
-    private ConstraintLayout rootLayout;
-    private TableLayout tableLayout;
-    private Vector<TableRow> tableRows;
-    private Button b_validate;
     private Vector<Integer> drawnNumbers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        setContentView(R.layout.activity_main_prog);
-//
-//        rowNumber = 3;
-//        columnNumber = 9;
-//
-//        // Linear Layout
-//        rootLayout = findViewById(R.id.activity_main_prog_rootlayout);
-//        linearLayout = new LinearLayout(this);
-//        linearLayout.setLayoutParams(new LinearLayout.LayoutParams(rootLayout.getWidth(),rootLayout.getHeight()));
-//        linearLayout.setOrientation(LinearLayout.VERTICAL);
-//
-//        // Input with table
-//        tableLayout = new TableLayout(this);
-//        tableRows = new Vector<>();
-//        cartonInputMatrix = new Vector<>();
-//        for (int i = 0; i < rowNumber; i++) {
-//            tableRows.add(new TableRow(this));
-//            cartonInputMatrix.add(new Vector<EditText>());
-//            for (int j = 0; j < columnNumber; j++) {
-//                cartonInputMatrix.get(i).add(new EditText(this));
-//                cartonInputMatrix.get(i).get(j).setWidth(0);
-//                tableRows.get(i).addView(cartonInputMatrix.get(i).get(j));
-//            }
-//            tableLayout.addView(tableRows.get(i));
-//        }
-//
-//        linearLayout.addView(tableLayout);
-//
-//
-//        b_validate = new Button(this);
-//        b_validate.setText("Validate");
-//        linearLayout.addView(b_validate);
-//
-//        rootLayout.addView(linearLayout);
 
         carton = new Carton(3, 9);
-        inputCarton = new Vector<>();
+        cartonInputMatrix = new Vector<>();
         id = new View[3][9];
 
         initializeIDsCarton();
 
         for (int i = 0; i < 3; i++) {
-            inputCarton.add(new Vector<EditText>());
+            cartonInputMatrix.add(new Vector<EditText>());
             for (int j = 0; j < 9; j++) {
-                inputCarton.get(i).add((EditText) id[i][j]);
+                cartonInputMatrix.get(i).add((EditText) id[i][j]);
             }
         }
 
@@ -92,14 +45,39 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 carton.display();
-                for (int i = 0; i < 3; i++) {
-                    for (int j = 0; j < 9; j++) {
-                        String currentValue = ((EditText) id[i][j]).getText().toString();
-                        if (!currentValue.isEmpty()) {
-                            carton.addToRow(i, Integer.valueOf(currentValue));
+
+                if (validate.getText().equals("Validate")) {
+                    validate.setText("Modify");
+
+                    for (int i = 0; i < 3; i++) {
+                        for (int j = 0; j < 9; j++) {
+                            String currentValue = ((EditText) id[i][j]).getText().toString();
+                            if (!currentValue.isEmpty()) {
+                                carton.addToRow(i, Integer.valueOf(currentValue));
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < 3; i++) {
+                        for (int j = 0; j < 9; j++) {
+                            if (carton.getValueInRow(i, j) == -1) {
+                                cartonInputMatrix.get(i).get(j).setText("");
+                            } else {
+                                cartonInputMatrix.get(i).get(j).setText(String.valueOf(carton.getValueInRow(i, j)));
+                            }
+                            cartonInputMatrix.get(i).get(j).setEnabled(false);
+                        }
+                    }
+                } else {
+                    carton.clear();
+                    validate.setText("Validate");
+                    for (int i = 0; i < 3; i++) {
+                        for (int j = 0; j < 9; j++) {
+                            cartonInputMatrix.get(i).get(j).setEnabled(true);
                         }
                     }
                 }
+
                 carton.display();
             }
         });
@@ -114,11 +92,9 @@ public class MainActivity extends AppCompatActivity {
         Integer valueToAddOrRemove = Integer.valueOf(b.getText().toString());
         if (drawnNumbers.contains(valueToAddOrRemove)) {
             drawnNumbers.remove(valueToAddOrRemove);
-            b.setBackgroundColor(android.R.drawable.btn_default);
             System.out.println("Remove number " + b.getText().toString());
         } else {
             drawnNumbers.add(valueToAddOrRemove);
-            b.setBackgroundColor(Color.YELLOW);
             System.out.println("Add number " + b.getText().toString());
         }
     }
