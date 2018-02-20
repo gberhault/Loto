@@ -1,12 +1,14 @@
 package com.wordpress.guillaumeberhault.loto;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.NumberPicker;
+import android.widget.TextView;
 
+import java.util.Collections;
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,6 +19,10 @@ public class MainActivity extends AppCompatActivity {
 
     Carton carton;
 
+    NumberPicker numberPicker;
+
+    TextView textView_drawnNumbers, textView_sortedDrawnNumbers;
+
     private int rowNumber, columnNumber;
 
     private View[][] id;
@@ -26,6 +32,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        textView_drawnNumbers = findViewById(R.id.dn);
+        textView_sortedDrawnNumbers = findViewById(R.id.sdn);
+
+        numberPicker = findViewById(R.id.numpicker);
+        numberPicker.setMinValue(1);
+        numberPicker.setMaxValue(89);
 
         carton = new Carton(3, 9);
         cartonInputMatrix = new Vector<>();
@@ -88,18 +101,33 @@ public class MainActivity extends AppCompatActivity {
         if (drawnNumbers == null)
             drawnNumbers = new Vector<>();
 
-        Button b = (Button) v;
-        Integer valueToAddOrRemove = Integer.valueOf(b.getText().toString());
+//        Button b = (Button) v;
+        Integer valueToAddOrRemove = numberPicker.getValue();
         // Already drawn. Remove it.
         if (drawnNumbers.contains(valueToAddOrRemove)) {
             drawnNumbers.remove(valueToAddOrRemove);
-            b.setTextColor(Color.BLACK);
-            System.out.println("Remove number " + b.getText().toString());
+            System.out.println("Remove number " + String.valueOf(valueToAddOrRemove));
         } else {
             drawnNumbers.add(valueToAddOrRemove);
-            b.setTextColor(Color.RED);
-            System.out.println("Add number " + b.getText().toString());
+            System.out.println("Add number " + String.valueOf(valueToAddOrRemove));
         }
+        updateDrawnNumbersLists();
+    }
+
+    private void updateDrawnNumbersLists() {
+        textView_drawnNumbers.setText("");
+        textView_sortedDrawnNumbers.setText("");
+        for (Integer i :
+                drawnNumbers) {
+            textView_drawnNumbers.setText(i.toString() + " ");
+        }
+        Vector<Integer> sortedDrawnNumbers = drawnNumbers;
+        Collections.sort(sortedDrawnNumbers);
+        for (Integer i :
+                drawnNumbers) {
+            textView_sortedDrawnNumbers.setText(i.toString() + " ");
+        }
+
     }
 
     private void initializeIDsCarton() {
