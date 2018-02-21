@@ -5,7 +5,7 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Created by berhagu1 on 2/13/2018.
@@ -26,7 +26,7 @@ public class CartonTest {
         fillCarton();
         for (int i = 0; i < rowNumber; i++) {
             for (int j = 0; j < columnNumber; j++) {
-                Assert.assertEquals(j*10+i+1, carton.getValueInRow(i, j));
+                Assert.assertEquals(j * 10 + i + 1, carton.getValueInRow(i, j));
             }
         }
 
@@ -41,13 +41,13 @@ public class CartonTest {
     @Test
     public void checkDrawnNumbers_nothing() throws Exception {
         fillCartonRealExample();
-        Assert.assertEquals(Carton.status.nothing, carton.checkDrawnNumbers(new Vector<Integer>()));
+        Assert.assertEquals(Carton.status.nothing, carton.checkDrawnNumbers(new ArrayList<Integer>()));
     }
 
     @Test
     public void checkDrawnNumbers_1rowComplete() throws Exception {
         fillCartonRealExample();
-        Vector<Integer> drawnNumbers = new Vector<>();
+        ArrayList<Integer> drawnNumbers = new ArrayList<>();
 
         drawnNumbers.add(9);
         drawnNumbers.add(17);
@@ -61,7 +61,7 @@ public class CartonTest {
     @Test
     public void checkDrawnNumbers_2RowsComplete() throws Exception {
         fillCartonRealExample();
-        Vector<Integer> drawnNumbers = new Vector<>();
+        ArrayList<Integer> drawnNumbers = new ArrayList<>();
 
         drawnNumbers.add(9);
         drawnNumbers.add(17);
@@ -81,7 +81,7 @@ public class CartonTest {
     @Test
     public void checkDrawnNumbers_cartonComplete() throws Exception {
         fillCartonRealExample();
-        Vector<Integer> drawnNumbers = new Vector<>();
+        ArrayList<Integer> drawnNumbers = new ArrayList<>();
 
         drawnNumbers.add(9);
         drawnNumbers.add(17);
@@ -204,5 +204,4 @@ public class CartonTest {
         carton.addToRow(2, 73);
         carton.addToRow(2, 83);
     }
-
 }

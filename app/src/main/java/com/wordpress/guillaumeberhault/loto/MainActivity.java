@@ -9,12 +9,12 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity {
 
-    Vector<Vector<EditText>> cartonInputMatrix;
+    ArrayList<ArrayList<EditText>> cartonInputMatrix;
 
     Button validate;
 
@@ -24,10 +24,10 @@ public class MainActivity extends AppCompatActivity {
 
     TextView textView_drawnNumbers, textView_sortedDrawnNumbers;
 
-    private int rowNumber=3, columnNumber=9;
+    private int rowNumber = 3, columnNumber = 9;
 
     private View[][] id;
-    private Vector<Integer> drawnNumbers;
+    private ArrayList<Integer> drawnNumbers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +42,13 @@ public class MainActivity extends AppCompatActivity {
         numberPicker.setMaxValue(89);
 
         carton = new Carton(3, 9);
-        cartonInputMatrix = new Vector<>();
+        cartonInputMatrix = new ArrayList<>();
         id = new View[3][9];
 
         initializeIDsCarton();
 
         for (int i = 0; i < 3; i++) {
-            cartonInputMatrix.add(new Vector<EditText>());
+            cartonInputMatrix.add(new ArrayList<EditText>());
             for (int j = 0; j < 9; j++) {
                 cartonInputMatrix.get(i).add((EditText) id[i][j]);
             }
@@ -100,20 +100,21 @@ public class MainActivity extends AppCompatActivity {
 
     public void addOrRemoveDrawnNumbers(View v) {
         if (drawnNumbers == null)
-            drawnNumbers = new Vector<>();
+            drawnNumbers = new ArrayList<>();
 
 //        Button b = (Button) v;
         Integer valueToAddOrRemove = numberPicker.getValue();
         // Already drawn. Remove it.
         if (drawnNumbers.contains(valueToAddOrRemove)) {
+            updateCartonDisplay();
             drawnNumbers.remove(valueToAddOrRemove);
             System.out.println("Remove number " + String.valueOf(valueToAddOrRemove));
         } else {
             drawnNumbers.add(valueToAddOrRemove);
+            updateCartonDisplay();
             System.out.println("Add number " + String.valueOf(valueToAddOrRemove));
         }
         updateDrawnNumbersLists();
-        updateCartonDisplay();
     }
 
     private void updateDrawnNumbersLists() {
@@ -129,10 +130,10 @@ public class MainActivity extends AppCompatActivity {
         }
         textView_drawnNumbers.setText(drawnNumberString);
 
-        Vector<Integer> sortedDrawnNumbers = drawnNumbers;
+        ArrayList<Integer> sortedDrawnNumbers = (ArrayList<Integer>) drawnNumbers.clone();
         Collections.sort(sortedDrawnNumbers);
         for (Integer i :
-                drawnNumbers) {
+                sortedDrawnNumbers) {
             sortedDrawnNumbersString += i.toString() + " ";
         }
         textView_sortedDrawnNumbers.setText(sortedDrawnNumbersString);
@@ -144,7 +145,11 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < rowNumber; i++) {
                 for (int j = 0; j < columnNumber; j++) {
                     if (e.equals(carton.getValueInRow(i, j))) {
-                        cartonInputMatrix.get(i).get(j).setTextColor(Color.RED);
+                        if (cartonInputMatrix.get(i).get(j).getTextColors().getDefaultColor() == Color.RED) {
+                            cartonInputMatrix.get(i).get(j).setTextColor(Color.BLACK);
+                        } else {
+                            cartonInputMatrix.get(i).get(j).setTextColor(Color.RED);
+                        }
                     }
                 }
             }

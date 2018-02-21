@@ -1,18 +1,18 @@
 package com.wordpress.guillaumeberhault.loto;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Created by berhagu1 on 2/13/2018.
  */
 
 class Row {
-    private Vector<Integer> columns;
+    private ArrayList<Integer> columns;
     private int columnNumber;
 
     public Row(int columnNumber) {
         this.columnNumber = columnNumber;
-        this.columns = new Vector<>();
+        this.columns = new ArrayList<>();
 
         for (int i = 0; i < columnNumber; i++) {
             columns.add(new Integer(-1));
