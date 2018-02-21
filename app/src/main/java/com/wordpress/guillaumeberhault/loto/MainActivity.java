@@ -1,5 +1,6 @@
 package com.wordpress.guillaumeberhault.loto;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextView textView_drawnNumbers, textView_sortedDrawnNumbers;
 
-    private int rowNumber, columnNumber;
+    private int rowNumber=3, columnNumber=9;
 
     private View[][] id;
     private Vector<Integer> drawnNumbers;
@@ -112,22 +113,42 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("Add number " + String.valueOf(valueToAddOrRemove));
         }
         updateDrawnNumbersLists();
+        updateCartonDisplay();
     }
 
     private void updateDrawnNumbersLists() {
         textView_drawnNumbers.setText("");
         textView_sortedDrawnNumbers.setText("");
+
+        String drawnNumberString = "";
+        String sortedDrawnNumbersString = "";
+
         for (Integer i :
                 drawnNumbers) {
-            textView_drawnNumbers.setText(i.toString() + " ");
+            drawnNumberString = drawnNumberString + i.toString() + " ";
         }
+        textView_drawnNumbers.setText(drawnNumberString);
+
         Vector<Integer> sortedDrawnNumbers = drawnNumbers;
         Collections.sort(sortedDrawnNumbers);
         for (Integer i :
                 drawnNumbers) {
-            textView_sortedDrawnNumbers.setText(i.toString() + " ");
+            sortedDrawnNumbersString += i.toString() + " ";
         }
+        textView_sortedDrawnNumbers.setText(sortedDrawnNumbersString);
+    }
 
+    private void updateCartonDisplay() {
+        for (Integer e :
+                drawnNumbers) {
+            for (int i = 0; i < rowNumber; i++) {
+                for (int j = 0; j < columnNumber; j++) {
+                    if (e.equals(carton.getValueInRow(i, j))) {
+                        cartonInputMatrix.get(i).get(j).setTextColor(Color.RED);
+                    }
+                }
+            }
+        }
     }
 
     private void initializeIDsCarton() {
