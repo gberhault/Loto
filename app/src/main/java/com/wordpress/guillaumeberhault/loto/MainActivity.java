@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,11 +29,16 @@ public class MainActivity extends AppCompatActivity {
 
     private View[][] id;
     private ArrayList<Integer> drawnNumbers;
+    private boolean oneRowComplete;
+    private boolean twoRowsComplete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.oneRowComplete = false;
+        this.twoRowsComplete = false;
 
         textView_drawnNumbers = findViewById(R.id.dn);
         textView_sortedDrawnNumbers = findViewById(R.id.sdn);
@@ -106,15 +112,25 @@ public class MainActivity extends AppCompatActivity {
         Integer valueToAddOrRemove = numberPicker.getValue();
         // Already drawn. Remove it.
         if (drawnNumbers.contains(valueToAddOrRemove)) {
-            updateCartonDisplay();
+            updateCartonDisplay(valueToAddOrRemove);
             drawnNumbers.remove(valueToAddOrRemove);
             System.out.println("Remove number " + String.valueOf(valueToAddOrRemove));
         } else {
             drawnNumbers.add(valueToAddOrRemove);
-            updateCartonDisplay();
+            updateCartonDisplay(valueToAddOrRemove);
             System.out.println("Add number " + String.valueOf(valueToAddOrRemove));
         }
         updateDrawnNumbersLists();
+
+        if (!oneRowComplete && carton.checkDrawnNumbers(drawnNumbers) == Carton.status.oneRowComplete) {
+            oneRowComplete = true;
+            Toast.makeText(this, "One row is complete", Toast.LENGTH_LONG).show();
+        } else if (!twoRowsComplete && carton.checkDrawnNumbers(drawnNumbers) == Carton.status.twoRowsComplete) {
+            twoRowsComplete = true;
+            Toast.makeText(this, "Two rows are complete", Toast.LENGTH_LONG).show();
+        } else if (carton.checkDrawnNumbers(drawnNumbers) == Carton.status.cartonComplete) {
+            Toast.makeText(this, "Carton is complete", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void updateDrawnNumbersLists() {
@@ -139,21 +155,19 @@ public class MainActivity extends AppCompatActivity {
         textView_sortedDrawnNumbers.setText(sortedDrawnNumbersString);
     }
 
-    private void updateCartonDisplay() {
-        for (Integer e :
-                drawnNumbers) {
-            for (int i = 0; i < rowNumber; i++) {
-                for (int j = 0; j < columnNumber; j++) {
-                    if (e.equals(carton.getValueInRow(i, j))) {
-                        if (cartonInputMatrix.get(i).get(j).getTextColors().getDefaultColor() == Color.RED) {
-                            cartonInputMatrix.get(i).get(j).setTextColor(Color.BLACK);
-                        } else {
-                            cartonInputMatrix.get(i).get(j).setTextColor(Color.RED);
-                        }
+    private void updateCartonDisplay(int currentNumber) {
+        for (int i = 0; i < rowNumber; i++) {
+            for (int j = 0; j < columnNumber; j++) {
+                if (currentNumber == carton.getValueInRow(i, j)) {
+                    if (cartonInputMatrix.get(i).get(j).getTextColors().getDefaultColor() == Color.RED) {
+                        cartonInputMatrix.get(i).get(j).setTextColor(Color.BLACK);
+                    } else {
+                        cartonInputMatrix.get(i).get(j).setTextColor(Color.RED);
                     }
                 }
             }
         }
+
     }
 
     private void initializeIDsCarton() {
@@ -188,4 +202,5 @@ public class MainActivity extends AppCompatActivity {
         id[2][7] = findViewById(R.id.c38);
         id[2][8] = findViewById(R.id.c39);
     }
+
 }
