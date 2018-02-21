@@ -1,6 +1,6 @@
 package com.wordpress.guillaumeberhault.loto;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Created by berhagu1 on 2/13/2018.
@@ -8,15 +8,22 @@ import java.util.Vector;
 
 public class Carton {
 
-    private Vector<Row> rowVector;
+    private ArrayList<Row> rowVector;
 
     private int rowNumber, columnNumber;
 
-    public enum status {
-        oneRowComplete, twoRowsComplete, cartonComplete, nothing;
+    public Carton(int rowNumber, int columnNumber) {
+        this.rowNumber = rowNumber;
+        this.columnNumber = columnNumber;
+        this.rowVector = new ArrayList<>(rowNumber);
+
+        for (int i = 0; i < rowNumber; i++) {
+            Row element = new Row(columnNumber);
+            rowVector.add(element);
+        }
     }
 
-    public status checkDrawnNumbers(Vector<Integer> drawnNumbersList) {
+    public status checkDrawnNumbers(ArrayList<Integer> drawnNumbersList) {
 
         int row0Status, row1Status, row2Status;
 
@@ -34,7 +41,7 @@ public class Carton {
             return status.cartonComplete;
     }
 
-    private int isRowComplete(Row row, Vector<Integer> drawnNumbersList) {
+    private int isRowComplete(Row row, ArrayList<Integer> drawnNumbersList) {
         if (drawnNumbersList == null || drawnNumbersList.isEmpty())
             return 0;
         // for all columns
@@ -56,17 +63,6 @@ public class Carton {
         }
         // if we are here, all columns found a match.
         return 1;
-    }
-
-    public Carton(int rowNumber, int columnNumber) {
-        this.rowNumber = rowNumber;
-        this.columnNumber = columnNumber;
-        this.rowVector = new Vector<>(rowNumber);
-
-        for (int i = 0; i < rowNumber; i++) {
-            Row element = new Row(columnNumber);
-            rowVector.add(element);
-        }
     }
 
     /**
@@ -92,7 +88,6 @@ public class Carton {
         return rowVector.get(rowIndex).getColumnValue(columnIndex);
     }
 
-
     public void display() {
         for (int i = 0; i < rowNumber; i++) {
             System.out.print("|");
@@ -113,5 +108,9 @@ public class Carton {
                 rowVector.get(i).set(j, -1);
             }
         }
+    }
+
+    public enum status {
+        oneRowComplete, twoRowsComplete, cartonComplete, nothing;
     }
 }
