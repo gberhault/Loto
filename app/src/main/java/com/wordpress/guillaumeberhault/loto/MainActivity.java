@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<ArrayList<EditText>> cartonInputMatrix;
 
-    Button validate;
+    Button validate, clear;
 
     Carton carton;
 
@@ -35,79 +36,91 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+//        setContentView(R.layout.activity_main);
+        setContentView(R.layout.test);
 
-        this.oneRowComplete = false;
-        this.twoRowsComplete = false;
+        GridLayout cartonGridLayout = findViewById(R.id.grid);
 
-        textView_drawnNumbers = findViewById(R.id.dn);
-        textView_sortedDrawnNumbers = findViewById(R.id.sdn);
+        cartonGridLayout.setRowCount(rowNumber);
+        cartonGridLayout.setColumnCount(columnNumber);
 
-        numberPicker = findViewById(R.id.numpicker);
-        numberPicker.setMinValue(1);
-        numberPicker.setMaxValue(89);
+        Button button = new Button(this);
+        button.setText("test");
+        cartonGridLayout.addView(button,0);
 
-        carton = new Carton(3, 9);
-        cartonInputMatrix = new ArrayList<>();
-        id = new View[3][9];
 
-        initializeIDsCarton();
-
-        for (int i = 0; i < 3; i++) {
-            cartonInputMatrix.add(new ArrayList<EditText>());
-            for (int j = 0; j < 9; j++) {
-                cartonInputMatrix.get(i).add((EditText) id[i][j]);
-            }
-        }
-
-        validate = findViewById(R.id.validate);
-        validate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                carton.display();
-
-                if (validate.getText().equals("Validate")) {
-                    validate.setText("Modify");
-
-                    for (int i = 0; i < 3; i++) {
-                        for (int j = 0; j < 9; j++) {
-                            String currentValue = ((EditText) id[i][j]).getText().toString();
-                            if (!currentValue.isEmpty()) {
-                                carton.addToRow(i, Integer.valueOf(currentValue));
-                            }
-                        }
-                    }
-
-                    for (int i = 0; i < 3; i++) {
-                        for (int j = 0; j < 9; j++) {
-                            if (carton.getValueInRow(i, j) == -1) {
-                                cartonInputMatrix.get(i).get(j).setText("");
-                            } else {
-                                cartonInputMatrix.get(i).get(j).setText(String.valueOf(carton.getValueInRow(i, j)));
-                            }
-                            cartonInputMatrix.get(i).get(j).setEnabled(false);
-                        }
-                    }
-                } else {
-                    carton.clear();
-                    validate.setText("Validate");
-                    for (int i = 0; i < 3; i++) {
-                        for (int j = 0; j < 9; j++) {
-                            cartonInputMatrix.get(i).get(j).setEnabled(true);
-                        }
-                    }
-                }
-
-                carton.display();
-            }
-        });
+//        drawnNumbers = new ArrayList<>();
+//
+//        this.clear = findViewById(R.id.clear);
+//
+//        this.oneRowComplete = false;
+//        this.twoRowsComplete = false;
+//
+//        textView_drawnNumbers = findViewById(R.id.dn);
+//        textView_sortedDrawnNumbers = findViewById(R.id.sdn);
+//
+//        numberPicker = findViewById(R.id.numpicker);
+//        numberPicker.setMinValue(1);
+//        numberPicker.setMaxValue(89);
+//
+//        carton = new Carton(3, 9);
+//        cartonInputMatrix = new ArrayList<>();
+//        id = new View[3][9];
+//
+//        initializeIDsCarton();
+//
+//        for (int i = 0; i < 3; i++) {
+//            cartonInputMatrix.add(new ArrayList<EditText>());
+//            for (int j = 0; j < 9; j++) {
+//                cartonInputMatrix.get(i).add((EditText) id[i][j]);
+//            }
+//        }
+//
+//        validate = findViewById(R.id.validate);
+//        validate.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                carton.display();
+//
+//                if (validate.getText().equals("Validate")) {
+//                    validate.setText("Modify");
+//
+//                    for (int i = 0; i < 3; i++) {
+//                        for (int j = 0; j < 9; j++) {
+//                            String currentValue = ((EditText) id[i][j]).getText().toString();
+//                            if (!currentValue.isEmpty()) {
+//                                carton.addToRow(i, Integer.valueOf(currentValue));
+//                            }
+//                        }
+//                    }
+//
+//                    for (int i = 0; i < 3; i++) {
+//                        for (int j = 0; j < 9; j++) {
+//                            if (carton.getValueInRow(i, j) == -1) {
+//                                cartonInputMatrix.get(i).get(j).setText("");
+//                            } else {
+//                                cartonInputMatrix.get(i).get(j).setText(String.valueOf(carton.getValueInRow(i, j)));
+//                            }
+//                            cartonInputMatrix.get(i).get(j).setEnabled(false);
+//                        }
+//                    }
+//                } else {
+//                    carton.clear();
+//                    validate.setText("Validate");
+//                    for (int i = 0; i < 3; i++) {
+//                        for (int j = 0; j < 9; j++) {
+//                            cartonInputMatrix.get(i).get(j).setEnabled(true);
+//                        }
+//                    }
+//                }
+//
+//                carton.display();
+//            }
+//        });
 
     }
 
     public void addOrRemoveDrawnNumbers(View v) {
-        if (drawnNumbers == null)
-            drawnNumbers = new ArrayList<>();
-
 //        Button b = (Button) v;
         Integer valueToAddOrRemove = numberPicker.getValue();
         // Already drawn. Remove it.
@@ -134,25 +147,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateDrawnNumbersLists() {
-        textView_drawnNumbers.setText("");
-        textView_sortedDrawnNumbers.setText("");
+        if (drawnNumbers != null) {
+            textView_drawnNumbers.setText("");
+            textView_sortedDrawnNumbers.setText("");
 
-        String drawnNumberString = "";
-        String sortedDrawnNumbersString = "";
+            String drawnNumberString = "";
+            String sortedDrawnNumbersString = "";
 
-        for (Integer i :
-                drawnNumbers) {
-            drawnNumberString = drawnNumberString + i.toString() + " ";
+            for (Integer i :
+                    drawnNumbers) {
+                drawnNumberString = drawnNumberString + i.toString() + " ";
+            }
+            textView_drawnNumbers.setText(drawnNumberString);
+
+            ArrayList<Integer> sortedDrawnNumbers = (ArrayList<Integer>) drawnNumbers.clone();
+            Collections.sort(sortedDrawnNumbers);
+            for (Integer i :
+                    sortedDrawnNumbers) {
+                sortedDrawnNumbersString += i.toString() + " ";
+            }
+            textView_sortedDrawnNumbers.setText(sortedDrawnNumbersString);
         }
-        textView_drawnNumbers.setText(drawnNumberString);
-
-        ArrayList<Integer> sortedDrawnNumbers = (ArrayList<Integer>) drawnNumbers.clone();
-        Collections.sort(sortedDrawnNumbers);
-        for (Integer i :
-                sortedDrawnNumbers) {
-            sortedDrawnNumbersString += i.toString() + " ";
-        }
-        textView_sortedDrawnNumbers.setText(sortedDrawnNumbersString);
     }
 
     private void updateCartonDisplay(int currentNumber) {
@@ -203,4 +218,18 @@ public class MainActivity extends AppCompatActivity {
         id[2][8] = findViewById(R.id.c39);
     }
 
+    public void clearCarton(View v) {
+        carton.clear();
+        drawnNumbers.clear();
+        updateDrawnNumbersLists();
+        cleanDisplay();
+    }
+
+    private void cleanDisplay() {
+        for (int i = 0; i < rowNumber; i++) {
+            for (int j = 0; j < columnNumber; j++) {
+                cartonInputMatrix.get(i).get(j).setText("");
+            }
+        }
+    }
 }
