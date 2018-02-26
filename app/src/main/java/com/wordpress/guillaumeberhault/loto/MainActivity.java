@@ -2,6 +2,7 @@ package com.wordpress.guillaumeberhault.loto;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.DisplayMetrics;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean twoRowsComplete;
     private GridLayout currentCartonGridLayout;
     private Carton currentCarton;
+    private DisplayMetrics metrics;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,16 +51,16 @@ public class MainActivity extends AppCompatActivity {
                 if (validateBtn.getText().equals("Validate")) {
                     validateBtn.setText("Modify");
 
-                    retrieveValueForCarton(currentCarton);
+                    retrieveInputValuesForCarton(currentCarton);
                     updateCurrentCartonDisplay(currentCarton);
 
-                    allCartonInputsEnabled(false);
+                    EnableAllCartonInputs(false);
 
                 } else {
                     currentCarton.clear();
                     validateBtn.setText("Validate");
 
-                    allCartonInputsEnabled(true);
+                    EnableAllCartonInputs(true);
                 }
 
                 currentCarton.display();
@@ -66,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void retrieveValueForCarton(Carton carton) {
+    private void retrieveInputValuesForCarton(Carton carton) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
                 String currentValue = id[i][j].getText().toString();
@@ -77,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void allCartonInputsEnabled(boolean enabled) {
+    private void EnableAllCartonInputs(boolean enabled) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
                 id[i][j].setEnabled(enabled);
@@ -86,6 +89,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeViewsAndData() {
+        initializeViews();
+
+        initializeData();
+    }
+
+    private void initializeData() {
+        cartonArrayList = new ArrayList<>();
+        cartonArrayList.add(new Carton(3, 9));
+        currentCarton = cartonArrayList.get(0);
+
+        drawnNumbers = new ArrayList<>();
+
+        oneRowComplete = false;
+        twoRowsComplete = false;
+
+        metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+    }
+
+    private void initializeViews() {
         currentCartonGridLayout = findViewById(R.id.currentCarton);
 
         validateBtn = findViewById(R.id.validate);
@@ -96,62 +119,75 @@ public class MainActivity extends AppCompatActivity {
         numberPicker = findViewById(R.id.numpicker);
         numberPicker.setMinValue(1);
         numberPicker.setMaxValue(89);
+    }
 
-        cartonArrayList = new ArrayList<>();
-        cartonArrayList.add(new Carton(3, 9));
-        currentCarton = cartonArrayList.get(0);
+    private void newGame() {
+        initializeData();
+//        updateViews(); // Update currentCartonDisplay, list of cartons, drawn numbers
+    }
 
-        oneRowComplete = false;
-        twoRowsComplete = false;
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
     }
 
     private void updateCurrentCartonDisplay(Carton carton) {
+        id = new EditText[carton.getRowNumber()][carton.getColumnNumber()];
+
+        initializeCurrentGridLayoutWithCarton(carton);
+
+        updateCurrentGridLayoutValues(carton);
+    }
+
+    private void updateCurrentGridLayoutValues(Carton carton) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (carton.getValueInRow(i, j) == -1) {
+                    id[i][j].setText("");
+                } else {
+                    id[i][j].setText(String.valueOf(carton.getValueInRow(i, j)));
+                }
+            }
+        }
+    }
+
+    private void initializeCurrentGridLayoutWithCarton(Carton carton) {
         currentCartonGridLayout.removeAllViews();
 
         currentCartonGridLayout.setRowCount(carton.getRowNumber());
         currentCartonGridLayout.setColumnCount(carton.getColumnNumber());
 
-        drawnNumbers = new ArrayList<>();
-        id = new EditText[carton.getRowNumber()][carton.getColumnNumber()];
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
                 id[i][j] = new EditText(this);
                 id[i][j].setInputType(InputType.TYPE_CLASS_NUMBER);
                 id[i][j].setWidth(metrics.widthPixels / carton.getColumnNumber());
-                if (carton.getValueInRow(i, j) == -1) {
-                    id[i][j].setText("");
-                } else {
-                    id[i][j].setText(String.valueOf(carton.getValueInRow(i, j)));
-                }
                 currentCartonGridLayout.addView(id[i][j]);
             }
         }
     }
 
     public void addOrRemoveDrawnNumbers(View v) {
-//        Button b = (Button) v;
         Integer valueToAddOrRemove = numberPicker.getValue();
+        updateDrawnNumberCartonDisplay(valueToAddOrRemove);
+
         // Already drawn. Remove it.
         if (drawnNumbers.contains(valueToAddOrRemove)) {
-            updateDrawnNumberCartonDisplay(valueToAddOrRemove);
             drawnNumbers.remove(valueToAddOrRemove);
-            System.out.println("Remove number " + String.valueOf(valueToAddOrRemove));
         } else {
             drawnNumbers.add(valueToAddOrRemove);
-            updateDrawnNumberCartonDisplay(valueToAddOrRemove);
-            System.out.println("Add number " + String.valueOf(valueToAddOrRemove));
         }
-        updateDrawnNumbersLists();
 
+        updateDrawnNumbersLists();
         checkCartonStatus();
     }
 
     private void checkCartonStatus() {
         int index = 0;
+
         for (Carton c :
                 cartonArrayList) {
             index++;
@@ -170,26 +206,34 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateDrawnNumbersLists() {
         if (drawnNumbers != null) {
-            textView_drawnNumbers.setText("");
-            textView_sortedDrawnNumbers.setText("");
 
-            String drawnNumberString = "";
-            String sortedDrawnNumbersString = "";
+            updateDrawnNumberDisplay();
 
-            for (Integer i :
-                    drawnNumbers) {
-                drawnNumberString = drawnNumberString + i.toString() + " ";
-            }
-            textView_drawnNumbers.setText(drawnNumberString);
-
-            ArrayList<Integer> sortedDrawnNumbers = (ArrayList<Integer>) drawnNumbers.clone();
-            Collections.sort(sortedDrawnNumbers);
-            for (Integer i :
-                    sortedDrawnNumbers) {
-                sortedDrawnNumbersString += i.toString() + " ";
-            }
-            textView_sortedDrawnNumbers.setText(sortedDrawnNumbersString);
+            updateSortedDrawnNumberDisplay();
         }
+    }
+
+    private void updateSortedDrawnNumberDisplay() {
+        ArrayList<Integer> sortedDrawnNumbers = (ArrayList<Integer>) drawnNumbers.clone();
+        Collections.sort(sortedDrawnNumbers);
+        String sortedDrawnNumbersString = generateStringFromList(sortedDrawnNumbers);
+        textView_sortedDrawnNumbers.setText(sortedDrawnNumbersString);
+    }
+
+    private void updateDrawnNumberDisplay() {
+        String drawnNumberString = generateStringFromList(drawnNumbers);
+        textView_drawnNumbers.setText(drawnNumberString);
+    }
+
+    @NonNull
+    private String generateStringFromList(ArrayList<Integer> drawnNumberList) {
+        String drawnNumberString = "";
+
+        for (Integer i :
+                drawnNumberList) {
+            drawnNumberString = drawnNumberString + i.toString() + " ";
+        }
+        return drawnNumberString;
     }
 
     private void updateDrawnNumberCartonDisplay(int currentNumber) {
