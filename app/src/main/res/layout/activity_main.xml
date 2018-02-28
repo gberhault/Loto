@@ -7,83 +7,132 @@
     tools:context="com.wordpress.guillaumeberhault.loto.MainActivity">
 
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <GridLayout
+            android:id="@+id/currentCarton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"></GridLayout>
 
-            <GridLayout
-                android:id="@+id/currentCarton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </GridLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="90dp">
 
             <GridLayout
                 android:id="@+id/otherCartons"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:columnCount="4">
 
+                <Button
+                    android:id="@+id/carton1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Carton 1" />
+
+                <Button
+                    android:id="@+id/newCartonBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="newCarton"
+                    android:text="+" />
             </GridLayout>
 
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/validate"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Validate" />
+
+            <Button
+                android:id="@+id/clear"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:onClick="clearCarton"
+                android:text="Clear" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_weight="0.45"
+                android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/validate"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Validate" />
+                    android:text="Drawn Numbers" />
 
-                <Button
-                    android:id="@+id/clear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="clearCarton"
-                    android:text="Clear" />
+                <TextView
+                    android:id="@+id/dn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Drawn Numbers" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.45"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/dn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Sorted Drawn Numbers" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Sorted Drawn Numbers" />
+                <TextView
+                    android:id="@+id/sdn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/sdn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <NumberPicker
                 android:id="@+id/numpicker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_width="wrap_content"
+                android:layout_height="104dp" />
 
             <Button
                 android:id="@+id/button"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="addOrRemoveDrawnNumbers"
                 android:text="Add/Remove" />
-
         </LinearLayout>
 
-    </ScrollView>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="150dp">
+
+            <TextView
+                android:id="@+id/cartonsStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10" />
+        </ScrollView>
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

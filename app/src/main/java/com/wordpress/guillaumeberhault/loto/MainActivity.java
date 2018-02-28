@@ -12,14 +12,11 @@ import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
-
-    private ArrayList<Carton> cartonArrayList;
 
     private Button validateBtn;
     private NumberPicker numberPicker;
@@ -32,6 +29,11 @@ public class MainActivity extends AppCompatActivity {
     private GridLayout currentCartonGridLayout;
     private Carton currentCarton;
     private DisplayMetrics metrics;
+
+    private CartonHandler cartonHandler;
+    private TextView cartonsStatus;
+    private GridLayout otherCartonsGridLayout;
+    private Button carton1Btn;
 
 
     @Override
@@ -54,20 +56,29 @@ public class MainActivity extends AppCompatActivity {
                     retrieveInputValuesForCarton(currentCarton);
                     updateCurrentCartonDisplay(currentCarton);
 
-                    EnableAllCartonInputs(false);
+                    enableAllCartonInputs(false);
 
                 } else {
                     currentCarton.clear();
                     validateBtn.setText("Validate");
 
-                    EnableAllCartonInputs(true);
+                    enableAllCartonInputs(true);
                 }
 
                 currentCarton.display();
             }
         });
 
+        carton1Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentCarton = cartonHandler.getCarton(0);
+                updateCurrentCartonDisplay(currentCarton);
+            }
+        });
+
     }
+
 
     private void retrieveInputValuesForCarton(Carton carton) {
         for (int i = 0; i < 3; i++) {
@@ -80,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void EnableAllCartonInputs(boolean enabled) {
+    private void enableAllCartonInputs(boolean enabled) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
                 id[i][j].setEnabled(enabled);
@@ -89,15 +100,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initializeViewsAndData() {
-        initializeViews();
-
         initializeData();
+
+        initializeViews();
     }
 
     private void initializeData() {
-        cartonArrayList = new ArrayList<>();
-        cartonArrayList.add(new Carton(3, 9));
-        currentCarton = cartonArrayList.get(0);
+        cartonHandler = new CartonHandler();
+        cartonHandler.addNewCarton(3, 9);
+        currentCarton = cartonHandler.getCarton(0);
 
         drawnNumbers = new ArrayList<>();
 
@@ -119,6 +130,15 @@ public class MainActivity extends AppCompatActivity {
         numberPicker = findViewById(R.id.numpicker);
         numberPicker.setMinValue(1);
         numberPicker.setMaxValue(89);
+
+        cartonsStatus = findViewById(R.id.cartonsStatus);
+
+        otherCartonsGridLayout = findViewById(R.id.otherCartons);
+
+        carton1Btn = findViewById(R.id.carton1);
+        carton1Btn.setWidth(metrics.widthPixels / 4);
+
+        ((Button)findViewById(R.id.newCartonBtn)).setWidth(metrics.widthPixels / 4);
     }
 
     private void newGame() {
@@ -131,6 +151,25 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
+    }
+
+    public void newCarton(View v) {
+        cartonHandler.addNewCarton(3, 9);
+        Button child = new Button(this);
+        String CartonIndex = "Carton " + String.valueOf(cartonHandler.getCartonNumber());
+        child.setText(CartonIndex);
+        child.setWidth(metrics.widthPixels / 4);
+        child.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String buttonText = ((Button) view).getText().toString();
+                int cartonIndex = Integer.valueOf(buttonText.split(" ")[1]);
+                currentCarton = cartonHandler.getCarton(cartonIndex - 1);
+                updateCurrentCartonDisplay(currentCarton);
+            }
+        });
+        otherCartonsGridLayout.addView(child, cartonHandler.getCartonNumber() - 1);
+        updateCurrentCartonDisplay(currentCarton);
     }
 
     private void updateCurrentCartonDisplay(Carton carton) {
@@ -186,22 +225,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkCartonStatus() {
-        int index = 0;
-
-        for (Carton c :
-                cartonArrayList) {
-            index++;
-            if (!oneRowComplete && c.checkDrawnNumbers(drawnNumbers) == Carton.status.oneRowComplete) {
-                oneRowComplete = true;
-                Toast.makeText(this, "Carton " + String.valueOf(index) + ": 1 row is complete", Toast.LENGTH_LONG).show();
-            } else if (!twoRowsComplete && c.checkDrawnNumbers(drawnNumbers) == Carton.status.twoRowsComplete) {
-                twoRowsComplete = true;
-                Toast.makeText(this, "Carton " + String.valueOf(index) + ": 2 rows are complete", Toast.LENGTH_LONG).show();
-            } else if (c.checkDrawnNumbers(drawnNumbers) == Carton.status.cartonComplete) {
-                Toast.makeText(this, "Carton " + String.valueOf(index) + ": COMPLETE", Toast.LENGTH_LONG).show();
-            }
-        }
-
+        cartonsStatus.setText(cartonHandler.getAllCartonsStatus(drawnNumbers));
     }
 
     private void updateDrawnNumbersLists() {
@@ -253,7 +277,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void clearCarton(View v) {
         currentCarton.clear();
-        drawnNumbers.clear();
         updateDrawnNumbersLists();
         cleanDisplay();
     }
