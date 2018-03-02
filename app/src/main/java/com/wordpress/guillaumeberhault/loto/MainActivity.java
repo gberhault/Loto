@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         updateCurrentCartonDisplay(currentCarton);
 
+        // Validate depends on current carton. When carton is chosen -> update if enabled/disabled input + button name (OK / Modify)
         validateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
