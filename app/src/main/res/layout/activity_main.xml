@@ -19,24 +19,24 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="90dp">
+            android:layout_height="125dp">
 
             <GridLayout
                 android:id="@+id/otherCartons"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:columnCount="4">
+                android:layout_height="wrap_content">
 
                 <Button
                     android:id="@+id/carton1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Carton 1" />
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="2dp"
+                    android:text="1" />
 
                 <Button
                     android:id="@+id/newCartonBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:onClick="newCarton"
                     android:text="+" />
             </GridLayout>

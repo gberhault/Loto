@@ -18,6 +18,8 @@ import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final int buttonWidthdp = 50;
+    private int buttonWidthPixel;
     private Button validateBtn;
     private NumberPicker numberPicker;
     private TextView textView_drawnNumbers, textView_sortedDrawnNumbers;
@@ -136,9 +138,12 @@ public class MainActivity extends AppCompatActivity {
         otherCartonsGridLayout = findViewById(R.id.otherCartons);
 
         carton1Btn = findViewById(R.id.carton1);
-        carton1Btn.setWidth(metrics.widthPixels / 4);
+        buttonWidthPixel = convertDpToPixel(buttonWidthdp);
+        int maxColumnNumber = metrics.widthPixels/ buttonWidthPixel;
+        otherCartonsGridLayout.setColumnCount(maxColumnNumber);
+        carton1Btn.setWidth(buttonWidthPixel);
 
-        ((Button)findViewById(R.id.newCartonBtn)).setWidth(metrics.widthPixels / 4);
+        ((Button)findViewById(R.id.newCartonBtn)).setWidth(buttonWidthPixel);
     }
 
     private void newGame() {
@@ -155,15 +160,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void newCarton(View v) {
         cartonHandler.addNewCarton(3, 9);
-        Button child = new Button(this);
-        String CartonIndex = "Carton " + String.valueOf(cartonHandler.getCartonNumber());
-        child.setText(CartonIndex);
-        child.setWidth(metrics.widthPixels / 4);
-        child.setOnClickListener(new View.OnClickListener() {
+        View child = getLayoutInflater().inflate(R.layout.buttonnewcarton,null);
+        String CartonIndex = String.valueOf(cartonHandler.getCartonNumber());
+        Button childButton = child.findViewById(R.id.button);
+        childButton.setText(CartonIndex);
+        childButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String buttonText = ((Button) view).getText().toString();
-                int cartonIndex = Integer.valueOf(buttonText.split(" ")[1]);
+                int cartonIndex = Integer.valueOf(buttonText);
                 currentCarton = cartonHandler.getCarton(cartonIndex - 1);
                 updateCurrentCartonDisplay(currentCarton);
             }
@@ -203,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
             for (int j = 0; j < 9; j++) {
                 id[i][j] = new EditText(this);
                 id[i][j].setInputType(InputType.TYPE_CLASS_NUMBER);
-                id[i][j].setWidth(metrics.widthPixels / carton.getColumnNumber());
+                id[i][j].setWidth(buttonWidthPixel);
                 currentCartonGridLayout.addView(id[i][j]);
             }
         }
@@ -287,5 +292,17 @@ public class MainActivity extends AppCompatActivity {
                 id[i][j].setText("");
             }
         }
+    }
+
+
+    /**
+     * This method converts dp unit to equivalent pixels, depending on device density.
+     *
+     * @param dp A value in dp (density independent pixels) unit. Which we need to convert into pixels
+     * @return An int value to represent px equivalent to dp depending on device density
+     */
+    public int convertDpToPixel(int dp){
+        int px = (int) (dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
     }
 }
