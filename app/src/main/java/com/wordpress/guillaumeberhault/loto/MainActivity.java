@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,10 +32,8 @@ public class MainActivity extends AppCompatActivity {
     private DisplayMetrics metrics;
 
     private CartonHandler cartonHandler;
-    private TextView cartonsStatus;
+    private TextView cartonsStatusTV;
     private GridLayout otherCartonsGridLayout;
-    private Button carton1Btn;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,47 +43,81 @@ public class MainActivity extends AppCompatActivity {
         initializeViewsAndData();
 
         updateCurrentCartonDisplay(currentCarton);
-
-        // Validate depends on current carton. When carton is chosen -> update if enabled/disabled input + button name (OK / Modify)
-        validateCurrentCartonBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (currentCarton.isModifiable()) {
-                    retrieveInputValuesForCarton(currentCarton);
-                }
-                updateUI();
-            }
-        });
-
-        carton1Btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                currentCarton = cartonHandler.getCarton(0);
-                updateCurrentCartonDisplay(currentCarton);
-            }
-        });
-
     }
 
+    // OnClick Methods
+    public void validateOrModifyCurrentCarton(View v) {
+        if (currentCarton.isModifiable()) {
+            retrieveInputValuesForCarton(currentCarton);
+            currentCarton.setModifiable(false);
+        } else {
+            currentCarton.setModifiable(true);
+        }
+        updateUI();
+    }
 
-    private void retrieveInputValuesForCarton(Carton carton) {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 9; j++) {
-                String currentValue = id[i][j].getText().toString();
-                if (!currentValue.isEmpty()) {
-                    carton.addToRow(i, Integer.valueOf(currentValue));
-                }
-            }
+    public void newCarton(View v) {
+        cartonHandler.addNewCarton(3, 9);
+        addCartonButton(cartonHandler.getCartonNumber() - 1);
+    }
+
+    public void changeCurrentCarton(View v) {
+        Button b = (Button) v;
+        String buttonText = b.getText().toString();
+        int cartonIndex = Integer.valueOf(buttonText);
+        currentCarton = cartonHandler.getCarton(cartonIndex - 1);
+        updateUI();
+    }
+
+    public void addOrRemoveDrawnNumbers(View v) {
+        Integer valueToAddOrRemove = numberPicker.getValue();
+        // TODO: 03/03/2018 make it better. See comment inside method.
+//        updateDrawnNumberCartonDisplay(valueToAddOrRemove);
+
+        // Already drawn. Remove it.
+        if (drawnNumbers.contains(valueToAddOrRemove)) {
+            drawnNumbers.remove(valueToAddOrRemove);
+        } else {
+            drawnNumbers.add(valueToAddOrRemove);
+        }
+        updateUI();
+    }
+
+    public void deleteCurrentCarton(View v) {
+        if (cartonHandler.getCartonNumber() == 1) {
+            CharSequence text = "You need at least 1 carton.";
+            int duration = Toast.LENGTH_LONG;
+            Toast toast = Toast.makeText(this, text, duration);
+            toast.show();
+        } else {
+            cartonHandler.removeCarton(currentCarton);
+            currentCarton = cartonHandler.getCarton(0);
+            updateUI();
+            updateOtherCartonsGridLayout();
         }
     }
 
-    private void enableAllCartonInputs(boolean enabled) {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 9; j++) {
-                id[i][j].setEnabled(enabled);
-            }
-        }
+    // Others
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
     }
+
+
+    /**
+     * This method converts dp unit to equivalent pixels, depending on device density.
+     *
+     * @param dp A value in dp (density independent pixels) unit. Which we need to convert into pixels
+     * @return An int value to represent px equivalent to dp depending on device density
+     */
+    public int convertDpToPixel(int dp) {
+        int px = (int) (dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
+    }
+
+    // Private
 
     private void initializeViewsAndData() {
         initializeData();
@@ -115,22 +148,41 @@ public class MainActivity extends AppCompatActivity {
         numberPicker.setMinValue(1);
         numberPicker.setMaxValue(89);
 
-        cartonsStatus = findViewById(R.id.cartonsStatus);
+        cartonsStatusTV = findViewById(R.id.cartonsStatusTV);
 
-        otherCartonsGridLayout = findViewById(R.id.otherCartons);
+        otherCartonsGridLayout = findViewById(R.id.otherCartonsGL);
 
-        carton1Btn = findViewById(R.id.carton1);
         buttonWidthPixel = convertDpToPixel(buttonWidthdp);
         int maxColumnNumber = metrics.widthPixels / buttonWidthPixel;
         otherCartonsGridLayout.setColumnCount(maxColumnNumber);
-        carton1Btn.setWidth(buttonWidthPixel);
+        ((Button) findViewById(R.id.carton1Btn)).setWidth(buttonWidthPixel);
 
         ((Button) findViewById(R.id.newCartonBtn)).setWidth(buttonWidthPixel);
     }
 
+    private void retrieveInputValuesForCarton(Carton carton) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 9; j++) {
+                String currentValue = id[i][j].getText().toString();
+                if (!currentValue.isEmpty()) {
+                    carton.addToRow(i, Integer.valueOf(currentValue));
+                }
+            }
+        }
+    }
+
+    private void enableAllCartonInputs(boolean enabled) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 9; j++) {
+                id[i][j].setEnabled(enabled);
+            }
+        }
+    }
+
+
     private void newGame() {
         initializeData();
-//        updateViews(); // Update currentCartonDisplay, list of cartons, drawn numbers
+        updateUI();
     }
 
     private void updateUI() {
@@ -139,35 +191,31 @@ public class MainActivity extends AppCompatActivity {
         if (currentCarton.isModifiable()) {
             validateCurrentCartonBtn.setText("OK");
             enableAllCartonInputs(true);
-            currentCarton.setModifiable(false);
         } else {
             validateCurrentCartonBtn.setText("Modify");
             enableAllCartonInputs(false);
-            currentCarton.setModifiable(true);
         }
+        updateDrawnNumbersLists();
+        updateCartonStatuses();
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+    private void updateOtherCartonsGridLayout() {
+        otherCartonsGridLayout.removeAllViews();
+        for (int i = 0; i < cartonHandler.getCartonNumber(); i++) {
+            addCartonButton(i);
+        }
     }
 
-    public void newCarton(View v) {
-        cartonHandler.addNewCarton(3, 9);
+    private void addCartonButton(int i) {
         View child = getLayoutInflater().inflate(R.layout.buttonnewcarton, null);
-        String CartonIndex = String.valueOf(cartonHandler.getCartonNumber());
+        String CartonIndex = String.valueOf(i + 1);
         Button childButton = child.findViewById(R.id.button);
         childButton.setText(CartonIndex);
         childButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String buttonText = ((Button) view).getText().toString();
-                int cartonIndex = Integer.valueOf(buttonText);
-                currentCarton = cartonHandler.getCarton(cartonIndex - 1);
-                updateUI();
+                changeCurrentCarton(view);
             }
         });
         otherCartonsGridLayout.addView(child, cartonHandler.getCartonNumber() - 1);
@@ -210,23 +258,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void addOrRemoveDrawnNumbers(View v) {
-        Integer valueToAddOrRemove = numberPicker.getValue();
-        updateDrawnNumberCartonDisplay(valueToAddOrRemove);
-
-        // Already drawn. Remove it.
-        if (drawnNumbers.contains(valueToAddOrRemove)) {
-            drawnNumbers.remove(valueToAddOrRemove);
-        } else {
-            drawnNumbers.add(valueToAddOrRemove);
-        }
-
-        updateDrawnNumbersLists();
-        checkCartonStatus();
-    }
-
-    private void checkCartonStatus() {
-        cartonsStatus.setText(cartonHandler.getAllCartonsStatus(drawnNumbers));
+    private void updateCartonStatuses() {
+        cartonsStatusTV.setText(cartonHandler.getAllCartonsStatus(drawnNumbers));
     }
 
     private void updateDrawnNumbersLists() {
@@ -262,6 +295,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateDrawnNumberCartonDisplay(int currentNumber) {
+        //TODO  Parameter inside carton. So when carton  / update UI, it has the value and whether it has been drawn already
         for (int i = 0; i < currentCarton.getRowNumber(); i++) {
             for (int j = 0; j < currentCarton.getColumnNumber(); j++) {
                 if (currentNumber == currentCarton.getValueInRow(i, j)) {
@@ -276,29 +310,4 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void clearCarton(View v) {
-        currentCarton.clear();
-        updateDrawnNumbersLists();
-        cleanDisplay();
-    }
-
-    private void cleanDisplay() {
-        for (int i = 0; i < currentCarton.getRowNumber(); i++) {
-            for (int j = 0; j < currentCarton.getColumnNumber(); j++) {
-                id[i][j].setText("");
-            }
-        }
-    }
-
-
-    /**
-     * This method converts dp unit to equivalent pixels, depending on device density.
-     *
-     * @param dp A value in dp (density independent pixels) unit. Which we need to convert into pixels
-     * @return An int value to represent px equivalent to dp depending on device density
-     */
-    public int convertDpToPixel(int dp) {
-        int px = (int) (dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT));
-        return px;
-    }
 }

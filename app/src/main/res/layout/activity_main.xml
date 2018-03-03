@@ -22,14 +22,15 @@
             android:layout_height="125dp">
 
             <GridLayout
-                android:id="@+id/otherCartons"
+                android:id="@+id/otherCartonsGL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <Button
-                    android:id="@+id/carton1"
+                    android:id="@+id/carton1Btn"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:onClick="changeCurrentCarton"
                     android:padding="2dp"
                     android:text="1" />
 
@@ -52,13 +53,14 @@
                 android:id="@+id/validateCartonBtn"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
+                android:onClick="validateOrModifyCurrentCarton"
                 android:text="OK" />
 
             <Button
                 android:id="@+id/deleteCurrentCartonBtn"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:onClick="clearCarton"
+                android:onClick="deleteCurrentCarton"
                 android:text="Delete" />
         </LinearLayout>
 
@@ -127,7 +129,7 @@
             android:layout_height="150dp">
 
             <TextView
-                android:id="@+id/cartonsStatus"
+                android:id="@+id/cartonsStatusTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10" />
