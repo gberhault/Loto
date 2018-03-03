@@ -20,14 +20,12 @@ public class MainActivity extends AppCompatActivity {
 
     private final int buttonWidthdp = 50;
     private int buttonWidthPixel;
-    private Button validateBtn;
+    private Button validateCurrentCartonBtn;
     private NumberPicker numberPicker;
     private TextView textView_drawnNumbers, textView_sortedDrawnNumbers;
     private EditText[][] id;
 
     private ArrayList<Integer> drawnNumbers;
-    private boolean oneRowComplete;
-    private boolean twoRowsComplete;
     private GridLayout currentCartonGridLayout;
     private Carton currentCarton;
     private DisplayMetrics metrics;
@@ -48,27 +46,13 @@ public class MainActivity extends AppCompatActivity {
         updateCurrentCartonDisplay(currentCarton);
 
         // Validate depends on current carton. When carton is chosen -> update if enabled/disabled input + button name (OK / Modify)
-        validateBtn.setOnClickListener(new View.OnClickListener() {
+        validateCurrentCartonBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currentCarton.display();
-
-                if (validateBtn.getText().equals("Validate")) {
-                    validateBtn.setText("Modify");
-
+                if (currentCarton.isModifiable()) {
                     retrieveInputValuesForCarton(currentCarton);
-                    updateCurrentCartonDisplay(currentCarton);
-
-                    enableAllCartonInputs(false);
-
-                } else {
-                    currentCarton.clear();
-                    validateBtn.setText("Validate");
-
-                    enableAllCartonInputs(true);
                 }
-
-                currentCarton.display();
+                updateUI();
             }
         });
 
@@ -115,9 +99,6 @@ public class MainActivity extends AppCompatActivity {
 
         drawnNumbers = new ArrayList<>();
 
-        oneRowComplete = false;
-        twoRowsComplete = false;
-
         metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
     }
@@ -125,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
     private void initializeViews() {
         currentCartonGridLayout = findViewById(R.id.currentCarton);
 
-        validateBtn = findViewById(R.id.validate);
+        validateCurrentCartonBtn = findViewById(R.id.validateCartonBtn);
 
         textView_drawnNumbers = findViewById(R.id.dn);
         textView_sortedDrawnNumbers = findViewById(R.id.sdn);
@@ -140,16 +121,31 @@ public class MainActivity extends AppCompatActivity {
 
         carton1Btn = findViewById(R.id.carton1);
         buttonWidthPixel = convertDpToPixel(buttonWidthdp);
-        int maxColumnNumber = metrics.widthPixels/ buttonWidthPixel;
+        int maxColumnNumber = metrics.widthPixels / buttonWidthPixel;
         otherCartonsGridLayout.setColumnCount(maxColumnNumber);
         carton1Btn.setWidth(buttonWidthPixel);
 
-        ((Button)findViewById(R.id.newCartonBtn)).setWidth(buttonWidthPixel);
+        ((Button) findViewById(R.id.newCartonBtn)).setWidth(buttonWidthPixel);
     }
 
     private void newGame() {
         initializeData();
 //        updateViews(); // Update currentCartonDisplay, list of cartons, drawn numbers
+    }
+
+    private void updateUI() {
+        updateCurrentCartonDisplay(currentCarton);
+
+        if (currentCarton.isModifiable()) {
+            validateCurrentCartonBtn.setText("OK");
+            enableAllCartonInputs(true);
+            currentCarton.setModifiable(false);
+        } else {
+            validateCurrentCartonBtn.setText("Modify");
+            enableAllCartonInputs(false);
+            currentCarton.setModifiable(true);
+        }
+
     }
 
     @Override
@@ -161,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void newCarton(View v) {
         cartonHandler.addNewCarton(3, 9);
-        View child = getLayoutInflater().inflate(R.layout.buttonnewcarton,null);
+        View child = getLayoutInflater().inflate(R.layout.buttonnewcarton, null);
         String CartonIndex = String.valueOf(cartonHandler.getCartonNumber());
         Button childButton = child.findViewById(R.id.button);
         childButton.setText(CartonIndex);
@@ -171,11 +167,10 @@ public class MainActivity extends AppCompatActivity {
                 String buttonText = ((Button) view).getText().toString();
                 int cartonIndex = Integer.valueOf(buttonText);
                 currentCarton = cartonHandler.getCarton(cartonIndex - 1);
-                updateCurrentCartonDisplay(currentCarton);
+                updateUI();
             }
         });
         otherCartonsGridLayout.addView(child, cartonHandler.getCartonNumber() - 1);
-        updateCurrentCartonDisplay(currentCarton);
     }
 
     private void updateCurrentCartonDisplay(Carton carton) {
@@ -209,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
             for (int j = 0; j < 9; j++) {
                 id[i][j] = new EditText(this);
                 id[i][j].setInputType(InputType.TYPE_CLASS_NUMBER);
-                id[i][j].setWidth(buttonWidthPixel);
+                id[i][j].setWidth(metrics.widthPixels / currentCarton.getColumnNumber());
                 currentCartonGridLayout.addView(id[i][j]);
             }
         }
@@ -302,8 +297,8 @@ public class MainActivity extends AppCompatActivity {
      * @param dp A value in dp (density independent pixels) unit. Which we need to convert into pixels
      * @return An int value to represent px equivalent to dp depending on device density
      */
-    public int convertDpToPixel(int dp){
-        int px = (int) (dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+    public int convertDpToPixel(int dp) {
+        int px = (int) (dp * ((float) metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT));
         return px;
     }
 }
