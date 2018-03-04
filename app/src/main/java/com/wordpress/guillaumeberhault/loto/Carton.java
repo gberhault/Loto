@@ -12,15 +12,26 @@ public class Carton {
 
     private int rowNumber, columnNumber;
 
+    private boolean modifiable;
+
     public Carton(int rowNumber, int columnNumber) {
         this.rowNumber = rowNumber;
         this.columnNumber = columnNumber;
         this.rowVector = new ArrayList<>(rowNumber);
+        this.modifiable = true;
 
         for (int i = 0; i < rowNumber; i++) {
             Row element = new Row(columnNumber);
             rowVector.add(element);
         }
+    }
+
+    public boolean isModifiable() {
+        return modifiable;
+    }
+
+    public void setModifiable(boolean modifiable) {
+        this.modifiable = modifiable;
     }
 
     public status checkDrawnNumbers(ArrayList<Integer> drawnNumbersList) {

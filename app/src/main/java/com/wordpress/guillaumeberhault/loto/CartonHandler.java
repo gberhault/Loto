@@ -19,7 +19,10 @@ public class CartonHandler {
 
     public void removeCarton(int index) {
         cartonArrayList.remove(index);
+    }
 
+    public void removeCarton(Carton c) {
+        cartonArrayList.remove(c);
     }
 
     public String cartonStatus(int cartonIndex, ArrayList<Integer> drawnNumberList) {
