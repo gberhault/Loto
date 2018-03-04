@@ -1,12 +1,15 @@
 package com.wordpress.guillaumeberhault.loto;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
@@ -53,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             currentCarton.setModifiable(true);
         }
+
+        hideSoftKeyboard(this);
         updateUI();
     }
 
@@ -226,6 +231,18 @@ public class MainActivity extends AppCompatActivity {
         initializeCurrentGridLayoutWithCarton(carton);
 
         updateCurrentGridLayoutValues(carton);
+
+        updateCurrentGridLayoutDisplay();
+    }
+
+    private void updateCurrentGridLayoutDisplay() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (!id[i][j].getText().toString().isEmpty()) {
+                    id[i][j].setBackgroundResource(R.drawable.cartonbox_non_empty);
+                }
+            }
+        }
     }
 
     private void updateCurrentGridLayoutValues(Carton carton) {
@@ -246,12 +263,15 @@ public class MainActivity extends AppCompatActivity {
         currentCartonGridLayout.setRowCount(carton.getRowNumber());
         currentCartonGridLayout.setColumnCount(carton.getColumnNumber());
 
-
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
                 id[i][j] = new EditText(this);
                 id[i][j].setInputType(InputType.TYPE_CLASS_NUMBER);
+                id[i][j].setGravity(Gravity.CENTER);
+                id[i][j].setTextSize(23);
+                id[i][j].setBackgroundResource(R.drawable.cartonbox_empty);
                 id[i][j].setWidth(metrics.widthPixels / currentCarton.getColumnNumber());
+                id[i][j].setHeight(metrics.widthPixels / currentCarton.getColumnNumber());
                 currentCartonGridLayout.addView(id[i][j]);
             }
         }
@@ -291,6 +311,14 @@ public class MainActivity extends AppCompatActivity {
             drawnNumberString = drawnNumberString + i.toString() + " ";
         }
         return drawnNumberString;
+    }
+
+    private void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
     }
 
     private void updateDrawnNumberCartonDisplay(int currentNumber) {
