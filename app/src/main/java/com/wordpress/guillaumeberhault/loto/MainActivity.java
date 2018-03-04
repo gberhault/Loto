@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateOtherCartonsGridLayout() {
-        otherCartonsGridLayout.removeAllViews();
+        otherCartonsGridLayout.removeViews(0, otherCartonsGridLayout.getChildCount() - 1);
         for (int i = 0; i < cartonHandler.getCartonNumber(); i++) {
             addCartonButton(i);
         }
@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
                 changeCurrentCarton(view);
             }
         });
-        otherCartonsGridLayout.addView(child, cartonHandler.getCartonNumber() - 1);
+        otherCartonsGridLayout.addView(child, i);
     }
 
     private void updateCurrentCartonDisplay(Carton carton) {
