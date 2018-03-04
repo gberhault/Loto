@@ -93,8 +93,12 @@ public class MainActivity extends AppCompatActivity {
             cartonHandler.removeCarton(currentCarton);
             currentCarton = cartonHandler.getCarton(0);
             updateUI();
-            updateOtherCartonsGridLayout();
         }
+    }
+
+    public void newGame(View v) {
+        initializeData();
+        updateUI();
     }
 
     // Others
@@ -179,12 +183,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    private void newGame() {
-        initializeData();
-        updateUI();
-    }
-
     private void updateUI() {
         updateCurrentCartonDisplay(currentCarton);
 
@@ -197,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
         }
         updateDrawnNumbersLists();
         updateCartonStatuses();
+        updateOtherCartonsGridLayout();
 
     }
 
