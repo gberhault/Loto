@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -23,6 +24,8 @@ import java.util.Collections;
 public class MainActivity extends AppCompatActivity {
 
     private final int buttonWidthdp = 50;
+    private String minStr = "1";
+    private String maxStr = "89";
     private int buttonWidthPixel;
     private Button validateCurrentCartonBtn;
     private NumberPicker numberPicker;
@@ -270,6 +273,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
                 id[i][j] = new EditText(this);
+                id[i][j].setFilters(new InputFilter[]{ new InputFilterMinMax(minStr, maxStr)});
                 id[i][j].setInputType(InputType.TYPE_CLASS_NUMBER);
                 id[i][j].setGravity(Gravity.CENTER);
                 id[i][j].setTextSize(18);
