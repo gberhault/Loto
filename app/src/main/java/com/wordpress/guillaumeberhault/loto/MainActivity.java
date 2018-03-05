@@ -1,7 +1,7 @@
 package com.wordpress.guillaumeberhault.loto;
 
 import android.app.Activity;
-import android.graphics.Color;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private int buttonWidthPixel;
     private Button validateCurrentCartonBtn;
     private NumberPicker numberPicker;
-    private TextView textView_drawnNumbers, textView_sortedDrawnNumbers;
+    private TextView textView_drawnNumbers, drawnNumbers_title;
     private EditText[][] id;
 
     private ArrayList<Integer> drawnNumbers;
@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private CartonHandler cartonHandler;
     private TextView cartonsStatusTV;
     private GridLayout otherCartonsGridLayout;
+    private boolean drawnNumbersToBeDisplayed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,6 +147,8 @@ public class MainActivity extends AppCompatActivity {
 
         metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        this.drawnNumbersToBeDisplayed = true;
     }
 
     private void initializeViews() {
@@ -153,8 +156,8 @@ public class MainActivity extends AppCompatActivity {
 
         validateCurrentCartonBtn = findViewById(R.id.validateCartonBtn);
 
+        drawnNumbers_title = findViewById(R.id.dnTitle);
         textView_drawnNumbers = findViewById(R.id.dn);
-        textView_sortedDrawnNumbers = findViewById(R.id.sdn);
 
         numberPicker = findViewById(R.id.numpicker);
         numberPicker.setMinValue(1);
@@ -165,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
         otherCartonsGridLayout = findViewById(R.id.otherCartonsGL);
 
         buttonWidthPixel = convertDpToPixel(buttonWidthdp);
-        int maxColumnNumber = metrics.widthPixels / buttonWidthPixel;
+        int maxColumnNumber = (int) (metrics.widthPixels * 0.75) / buttonWidthPixel;
         otherCartonsGridLayout.setColumnCount(maxColumnNumber);
         ((Button) findViewById(R.id.carton1Btn)).setWidth(buttonWidthPixel);
 
@@ -245,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
                     if (drawnNumbers.contains(Integer.valueOf(id[i][j].getText().toString()))) {
                         id[i][j].setBackgroundResource(R.drawable.cartonbox_drawn);
                     } else {
-                        id[i][j].setBackgroundResource(R.drawable.cartonbox_non_empty);
+                        id[i][j].setBackgroundResource(R.drawable.whitebox_black_borders);
                     }
                 }
             }
@@ -273,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
                 id[i][j] = new EditText(this);
-                id[i][j].setFilters(new InputFilter[]{ new InputFilterMinMax(minStr, maxStr)});
+                id[i][j].setFilters(new InputFilter[]{new InputFilterMinMax(minStr, maxStr)});
                 id[i][j].setInputType(InputType.TYPE_CLASS_NUMBER);
                 id[i][j].setGravity(Gravity.CENTER);
                 id[i][j].setTextSize(18);
@@ -291,10 +294,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateDrawnNumbersLists() {
         if (drawnNumbers != null) {
-
-            updateDrawnNumberDisplay();
-
-            updateSortedDrawnNumberDisplay();
+            if (drawnNumbersToBeDisplayed)
+                updateDrawnNumberDisplay();
+            else
+                updateSortedDrawnNumberDisplay();
         }
     }
 
@@ -302,12 +305,16 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Integer> sortedDrawnNumbers = (ArrayList<Integer>) drawnNumbers.clone();
         Collections.sort(sortedDrawnNumbers);
         String sortedDrawnNumbersString = generateStringFromList(sortedDrawnNumbers);
-        textView_sortedDrawnNumbers.setText(sortedDrawnNumbersString);
+        textView_drawnNumbers.setText(sortedDrawnNumbersString);
+
+        drawnNumbers_title.setText("Sorted drawn Numbers");
     }
 
     private void updateDrawnNumberDisplay() {
         String drawnNumberString = generateStringFromList(drawnNumbers);
         textView_drawnNumbers.setText(drawnNumberString);
+
+        drawnNumbers_title.setText("Drawn Numbers");
     }
 
     @NonNull
@@ -322,27 +329,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) activity.getSystemService(
-                        Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(
-                activity.getCurrentFocus().getWindowToken(), 0);
-    }
-
-    private void updateDrawnNumberCartonDisplay(int currentNumber) {
-        //TODO  Parameter inside carton. So when carton  / update UI, it has the value and whether it has been drawn already
-        for (int i = 0; i < currentCarton.getRowNumber(); i++) {
-            for (int j = 0; j < currentCarton.getColumnNumber(); j++) {
-                if (currentNumber == currentCarton.getValueInRow(i, j)) {
-                    if (id[i][j].getTextColors().getDefaultColor() == Color.RED) {
-                        id[i][j].setTextColor(Color.BLACK);
-                    } else {
-                        id[i][j].setTextColor(Color.RED);
-                    }
-                }
-            }
+        // Check if no view has focus:
+        View view = activity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
-
     }
 
+    public void changeDrawnNumberDisplay(View view) {
+        drawnNumbersToBeDisplayed = !drawnNumbersToBeDisplayed;
+        updateUI();
+    }
 }
