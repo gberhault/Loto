@@ -149,13 +149,15 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:layout_marginTop="10dp">
+            android:layout_margin="10dp">
 
             <TextView
                 android:id="@+id/cartonsStatusTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10" />
+                android:ems="10"
+                android:padding="10dp"
+                android:background="@drawable/whitebox_black_borders"/>
         </ScrollView>
 
     </LinearLayout>
