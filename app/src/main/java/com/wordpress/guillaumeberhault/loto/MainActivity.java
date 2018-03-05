@@ -239,7 +239,11 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
                 if (!id[i][j].getText().toString().isEmpty()) {
-                    id[i][j].setBackgroundResource(R.drawable.cartonbox_non_empty);
+                    if (drawnNumbers.contains(Integer.valueOf(id[i][j].getText().toString()))) {
+                        id[i][j].setBackgroundResource(R.drawable.cartonbox_drawn);
+                    } else {
+                        id[i][j].setBackgroundResource(R.drawable.cartonbox_non_empty);
+                    }
                 }
             }
         }
@@ -268,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
                 id[i][j] = new EditText(this);
                 id[i][j].setInputType(InputType.TYPE_CLASS_NUMBER);
                 id[i][j].setGravity(Gravity.CENTER);
-                id[i][j].setTextSize(23);
+                id[i][j].setTextSize(18);
                 id[i][j].setBackgroundResource(R.drawable.cartonbox_empty);
                 id[i][j].setWidth(metrics.widthPixels / currentCarton.getColumnNumber());
                 id[i][j].setHeight(metrics.widthPixels / currentCarton.getColumnNumber());
