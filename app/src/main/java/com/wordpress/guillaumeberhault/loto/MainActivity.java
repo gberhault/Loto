@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initializeViewsAndData();
 
         updateCurrentCartonDisplay(currentCarton);
@@ -80,8 +79,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void addOrRemoveDrawnNumbers(View v) {
         Integer valueToAddOrRemove = numberPicker.getValue();
-        // TODO: 03/03/2018 make it better. See comment inside method.
-//        updateDrawnNumberCartonDisplay(valueToAddOrRemove);
 
         // Already drawn. Remove it.
         if (drawnNumbers.contains(valueToAddOrRemove)) {
@@ -116,8 +113,24 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        updateUI();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onBackPressed() {
+        // nothing to do.
+    }
 
     /**
      * This method converts dp unit to equivalent pixels, depending on device density.
