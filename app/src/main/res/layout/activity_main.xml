@@ -1,165 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rootLayout"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.wordpress.guillaumeberhault.loto.MainActivity">
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
 
-
-    <LinearLayout
+    <include
+        layout="@layout/app_bar_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent" />
 
-        <GridLayout
-            android:id="@+id/currentCarton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main"
+        app:menu="@menu/activity_main2_drawer" />
 
-        </GridLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="155dp"
-            android:orientation="horizontal" android:baselineAligned="false">
-
-            <ScrollView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.75">
-
-                <GridLayout
-                    android:id="@+id/otherCartonsGL"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <Button
-                        android:id="@+id/carton1Btn"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:onClick="changeCurrentCarton"
-                        android:padding="2dp"
-                        android:text="1" />
-
-                    <Button
-                        android:id="@+id/newCartonBtn"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:onClick="newCarton"
-                        android:text="+" />
-                </GridLayout>
-
-            </ScrollView>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.25"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/validateCartonBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:elevation="12dp"
-                    android:onClick="validateOrModifyCurrentCarton"
-                    android:text="OK" />
-
-                <Button
-                    android:id="@+id/deleteCurrentCartonBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:elevation="0dp"
-                    android:onClick="deleteCurrentCarton"
-                    android:text="Delete" />
-
-                <Button
-                    android:id="@+id/newgamebtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="newGame"
-                    android:text="New Game" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/drawnNumbersLayout"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.6"
-                android:onClick="changeDrawnNumberDisplay"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/dnTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:duplicateParentState="true"
-                    android:gravity="center"
-                    android:text="Drawn Numbers"
-                    android:textStyle="bold" />
-
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/whitebox_black_borders"
-                    android:fillViewport="true">
-
-                    <TextView
-                        android:id="@+id/dn"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp" />
-
-                </ScrollView>
-
-            </LinearLayout>
-
-            <NumberPicker
-                android:id="@+id/numpicker"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="0.15" />
-
-            <Button
-                android:id="@+id/button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="0.35"
-                android:onClick="addOrRemoveDrawnNumbers"
-                android:text="Add/Remove" />
-
-        </LinearLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_margin="10dp">
-
-            <TextView
-                android:id="@+id/cartonsStatusTV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:padding="10dp"
-                android:background="@drawable/whitebox_black_borders"/>
-        </ScrollView>
-
-    </LinearLayout>
-
-</android.support.constraint.ConstraintLayout>
+</android.support.v4.widget.DrawerLayout>
