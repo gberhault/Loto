@@ -1,16 +1,28 @@
 package com.wordpress.guillaumeberhault.loto;
 
+import android.content.Context;
+import android.os.Build;
+
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by berhagu1 on 2/27/2018.
  */
 
 public class CartonHandler {
+    private Locale currentLocale;
+    private Context context;
     private ArrayList<Carton> cartonArrayList;
 
-    public CartonHandler() {
+    public CartonHandler(Context context) {
         this.cartonArrayList = new ArrayList<>();
+        this.context = context;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            this.currentLocale = context.getResources().getConfiguration().getLocales().get(0);
+        } else {
+            this.currentLocale = context.getResources().getConfiguration().locale;
+        }
     }
 
     public void addNewCarton(int rowNumber, int columnNumber) {
@@ -31,16 +43,32 @@ public class CartonHandler {
             Carton carton = cartonArrayList.get(cartonIndex);
             switch (carton.checkDrawnNumbers(drawnNumberList)) {
                 case oneRowComplete:
-                    status = "Carton " + String.valueOf(cartonIndex + 1) + ": One row complete.";
+                    if (currentLocale == Locale.FRENCH) {
+                        status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.one_row_complete) + ".";
+                    } else {
+                        status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.one_row_complete) + ".";
+                    }
                     break;
                 case twoRowsComplete:
-                    status = "Carton " + String.valueOf(cartonIndex + 1) + ": Two rows complete.";
+                    if (currentLocale == Locale.FRENCH) {
+                        status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.two_rows_complete) + ".";
+                    } else {
+                        status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.two_rows_complete) + ".";
+                    }
                     break;
                 case cartonComplete:
-                    status = "Carton " + String.valueOf(cartonIndex + 1) + ": Carton complete.";
+                    if (currentLocale == Locale.FRENCH) {
+                        status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.carton_complete) + ".";
+                    } else {
+                        status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.carton_complete) + ".";
+                    }
                     break;
                 default:
-                    status = "Carton " + String.valueOf(cartonIndex + 1) + ": Nothing yet.";
+                    if (currentLocale == Locale.FRENCH) {
+                        status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.nothing_yet) + ".";
+                    } else {
+                        status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.nothing_yet) + ".";
+                    }
                     break;
             }
         } catch (IndexOutOfBoundsException e) {

@@ -121,15 +121,15 @@ public class Carton {
         }
     }
 
-    public enum status {
-        oneRowComplete, twoRowsComplete, cartonComplete, nothing;
-    }
-
     public int getRowNumber() {
         return rowNumber;
     }
 
     public int getColumnNumber() {
         return columnNumber;
+    }
+
+    public enum status {
+        oneRowComplete, twoRowsComplete, cartonComplete, nothing;
     }
 }

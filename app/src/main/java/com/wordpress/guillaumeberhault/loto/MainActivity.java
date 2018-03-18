@@ -141,6 +141,7 @@ public class MainActivity extends AppCompatActivity
     public void newCarton(View v) {
         cartonHandler.addNewCarton(3, 9);
         addCartonButton(cartonHandler.getCartonNumber() - 1);
+        updateUI();
     }
 
     public void changeCurrentCarton(View v) {
@@ -234,7 +235,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initializeData() {
-        cartonHandler = new CartonHandler();
+        cartonHandler = new CartonHandler(this);
         cartonHandler.addNewCarton(3, 9);
         currentCarton = cartonHandler.getCarton(0);
 
@@ -402,14 +403,14 @@ public class MainActivity extends AppCompatActivity
         String sortedDrawnNumbersString = generateStringFromList(sortedDrawnNumbers);
         textView_drawnNumbers.setText(sortedDrawnNumbersString);
 
-        drawnNumbers_title.setText("Sorted drawn Numbers");
+        drawnNumbers_title.setText(R.string.sorted_drawn_numbers);
     }
 
     private void updateDrawnNumberDisplay() {
         String drawnNumberString = generateStringFromList(drawnNumbers);
         textView_drawnNumbers.setText(drawnNumberString);
 
-        drawnNumbers_title.setText("Drawn Numbers");
+        drawnNumbers_title.setText(R.string.drawn_numbers);
     }
 
     @NonNull

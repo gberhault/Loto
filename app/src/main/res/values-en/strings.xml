@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ok">OK</string>
+    <string name="delete">Delete</string>
+    <string name="loto">Bingo</string>
+    <string name="new_game">New Game</string>
+    <string name="tools">Tools</string>
+    <string name="help">Help</string>
+    <string name="about">About</string>
+    <string name="drawn_numbers">Drawn Numbers</string>
+    <string name="add_remove">Add/Remove</string>
+    <string name="sorted_drawn_numbers">Sorted drawn Numbers</string>
+    <string name="one_row_complete">One row complete</string>
+    <string name="two_rows_complete">Two rows complete</string>
+    <string name="carton_complete">Carton complete</string>
+    <string name="nothing_yet">Nothing yet</string>
+</resources>

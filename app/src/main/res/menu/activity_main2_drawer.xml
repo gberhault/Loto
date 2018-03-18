@@ -7,19 +7,15 @@
         <item
             android:id="@+id/nav_newgame"
             android:icon="@drawable/ic_menu_newgame"
-            android:title="New Game" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:title="@string/new_game" />
     </group>
 
-    <item android:title="Help">
+    <item android:title="@string/help">
         <menu>
             <item
                 android:id="@+id/nav_about"
                 android:icon="@drawable/ic_menu_help"
-                android:title="About" />
+                android:title="@string/about" />
         </menu>
     </item>
 
