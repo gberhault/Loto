@@ -11,7 +11,7 @@
     <string name="add_remove">Ajouter/Retirer</string>
     <string name="sorted_drawn_numbers">Numéros tirés triés</string>
     <string name="one_row_complete">Une ligne complète</string>
-    <string name="two_rows_complete">Two rows complete</string>
-    <string name="carton_complete">Carton complete</string>
-    <string name="nothing_yet">Nothing yet</string>
+    <string name="two_rows_complete">Deux lignes complètes</string>
+    <string name="carton_complete">Carton complet</string>
+    <string name="nothing_yet">Rien pour le moment</string>
 </resources>

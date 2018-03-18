@@ -43,32 +43,16 @@ public class CartonHandler {
             Carton carton = cartonArrayList.get(cartonIndex);
             switch (carton.checkDrawnNumbers(drawnNumberList)) {
                 case oneRowComplete:
-                    if (currentLocale == Locale.FRENCH) {
-                        status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.one_row_complete) + ".";
-                    } else {
-                        status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.one_row_complete) + ".";
-                    }
+                    status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.one_row_complete) + ".";
                     break;
                 case twoRowsComplete:
-                    if (currentLocale == Locale.FRENCH) {
-                        status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.two_rows_complete) + ".";
-                    } else {
-                        status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.two_rows_complete) + ".";
-                    }
+                    status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.two_rows_complete) + ".";
                     break;
                 case cartonComplete:
-                    if (currentLocale == Locale.FRENCH) {
-                        status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.carton_complete) + ".";
-                    } else {
-                        status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.carton_complete) + ".";
-                    }
+                    status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.carton_complete) + ".";
                     break;
                 default:
-                    if (currentLocale == Locale.FRENCH) {
-                        status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.nothing_yet) + ".";
-                    } else {
-                        status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.nothing_yet) + ".";
-                    }
+                    status = "Carton " + String.valueOf(cartonIndex + 1) + ": " + context.getString(R.string.nothing_yet) + ".";
                     break;
             }
         } catch (IndexOutOfBoundsException e) {
