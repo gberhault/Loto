@@ -64,17 +64,15 @@
                     android:id="@+id/validateCartonBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:elevation="12dp"
                     android:onClick="validateOrModifyCurrentCarton"
-                    android:text="OK" />
+                    android:text="@string/ok" />
 
                 <Button
                     android:id="@+id/deleteCurrentCartonBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:elevation="0dp"
                     android:onClick="deleteCurrentCarton"
-                    android:text="Delete" />
+                    android:text="@string/delete" />
 
             </LinearLayout>
 
@@ -102,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:duplicateParentState="true"
                     android:gravity="center"
-                    android:text="Drawn Numbers"
+                    android:text="@string/drawn_numbers"
                     android:textStyle="bold" />
 
                 <ScrollView
@@ -138,7 +136,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_weight="0.35"
                 android:onClick="addOrRemoveDrawnNumbers"
-                android:text="Add/Remove" />
+                android:text="@string/add_remove" />
 
         </LinearLayout>
 

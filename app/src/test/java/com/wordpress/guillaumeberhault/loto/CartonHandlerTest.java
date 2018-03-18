@@ -4,19 +4,25 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by berhagu1 on 2/27/2018.
  */
+@RunWith(RobolectricTestRunner.class)
 public class CartonHandlerTest {
 
     private CartonHandler cartonHandler;
 
     @Before
     public void setUp() throws Exception {
-        cartonHandler = new CartonHandler();
+        cartonHandler = new CartonHandler(RuntimeEnvironment.application);
     }
 
     @Test
@@ -50,7 +56,7 @@ public class CartonHandlerTest {
         cartonHandler.addValueToCarton(0, 0, 1);
         cartonHandler.addValueToCarton(0, 1, 2);
         cartonHandler.addValueToCarton(0, 2, 3);
-        Assert.assertEquals("Carton 1: Nothing yet.", cartonHandler.cartonStatus(0, null));
+        Assert.assertEquals("Carton 1: " + R.string.nothing_yet + ".", cartonHandler.cartonStatus(0, null));
     }
 
     @Test
@@ -62,7 +68,7 @@ public class CartonHandlerTest {
         cartonHandler.addValueToCarton(1, 2, 3);
         ArrayList<Integer> drawnNumbers = new ArrayList<>();
         drawnNumbers.add(1);
-        Assert.assertEquals("Carton 2: One row complete.", cartonHandler.cartonStatus(1, drawnNumbers));
+        Assert.assertEquals("Carton 2: " + R.string.one_row_complete + ".", cartonHandler.cartonStatus(1, drawnNumbers));
     }
 
     @Test
@@ -75,7 +81,7 @@ public class CartonHandlerTest {
         ArrayList<Integer> drawnNumbers = new ArrayList<>();
         drawnNumbers.add(1);
         drawnNumbers.add(2);
-        Assert.assertEquals("Carton 2: Two rows complete.", cartonHandler.cartonStatus(1, drawnNumbers));
+        Assert.assertEquals("Carton 2: " + R.string.two_rows_complete + ".", cartonHandler.cartonStatus(1, drawnNumbers));
     }
 
     @Test
@@ -89,7 +95,7 @@ public class CartonHandlerTest {
         drawnNumbers.add(1);
         drawnNumbers.add(2);
         drawnNumbers.add(3);
-        Assert.assertEquals("Carton 2: Carton complete.", cartonHandler.cartonStatus(1, drawnNumbers));
+        Assert.assertEquals("Carton 2: " + R.string.carton_complete + ".", cartonHandler.cartonStatus(1, drawnNumbers));
     }
 
     @Test
@@ -124,10 +130,49 @@ public class CartonHandlerTest {
         drawnNumbers.add(2);
         drawnNumbers.add(3);
 
-        Assert.assertEquals("Carton 1: Nothing yet.\n" +
-                "Carton 2: One row complete.\n" +
-                "Carton 3: Two rows complete.\n" +
-                "Carton 4: Carton complete.", cartonHandler.getAllCartonsStatus(drawnNumbers));
+        Assert.assertEquals(Locale.ENGLISH, RuntimeEnvironment.application.getResources().getConfiguration().locale);
+
+        Assert.assertEquals("Carton 1: " + R.string.nothing_yet + ".\n" +
+                "Carton 2: " + R.string.one_row_complete + ".\n" +
+                "Carton 3: " + R.string.two_rows_complete + ".\n" +
+                "Carton 4: " + R.string.carton_complete + ".", cartonHandler.getAllCartonsStatus(drawnNumbers));
+
+    }
+
+    @Test
+    @Config(qualifiers="fr")
+    public void getAllCartonsStatus_4Cartons_ok_FRENCH() throws Exception {
+        cartonHandler.addNewCarton(3, 9);
+        cartonHandler.addValueToCarton(0, 0, 10);
+        cartonHandler.addValueToCarton(0, 1, 20);
+        cartonHandler.addValueToCarton(0, 2, 30);
+
+        cartonHandler.addNewCarton(3, 9);
+        cartonHandler.addValueToCarton(1, 0, 1);
+        cartonHandler.addValueToCarton(1, 1, 20);
+        cartonHandler.addValueToCarton(1, 2, 30);
+
+        cartonHandler.addNewCarton(3, 9);
+        cartonHandler.addValueToCarton(2, 0, 1);
+        cartonHandler.addValueToCarton(2, 1, 2);
+        cartonHandler.addValueToCarton(2, 2, 30);
+
+        cartonHandler.addNewCarton(3, 9);
+        cartonHandler.addValueToCarton(3, 0, 1);
+        cartonHandler.addValueToCarton(3, 1, 2);
+        cartonHandler.addValueToCarton(3, 2, 3);
+
+        ArrayList<Integer> drawnNumbers = new ArrayList<>();
+        drawnNumbers.add(1);
+        drawnNumbers.add(2);
+        drawnNumbers.add(3);
+
+        Assert.assertEquals(Locale.FRENCH, RuntimeEnvironment.application.getResources().getConfiguration().locale);
+
+        Assert.assertEquals("Carton 1: " + R.string.nothing_yet + ".\n" +
+                "Carton 2: " + R.string.one_row_complete + ".\n" +
+                "Carton 3: " + R.string.two_rows_complete + ".\n" +
+                "Carton 4: " + R.string.carton_complete + ".", cartonHandler.getAllCartonsStatus(drawnNumbers));
     }
 
     @Test
