@@ -113,8 +113,6 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_about) {
             // Handle the camera action
-        } else if (id == R.id.nav_manage) {
-
         } else if (id == R.id.nav_newgame) {
             newGame();
         }
