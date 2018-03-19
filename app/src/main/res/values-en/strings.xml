@@ -14,4 +14,5 @@
     <string name="two_rows_complete">Two rows complete</string>
     <string name="carton_complete">Carton complete</string>
     <string name="nothing_yet">Nothing yet</string>
+    <string name="dialog_about">This application has been developed by Guillaume Berhault.</string>
 </resources>

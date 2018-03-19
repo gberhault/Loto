@@ -14,4 +14,5 @@
     <string name="two_rows_complete">Deux lignes complètes</string>
     <string name="carton_complete">Carton complet</string>
     <string name="nothing_yet">Rien pour le moment</string>
+    <string name="dialog_about">Cette application a été développée par Guillaume Berhault.</string>
 </resources>
