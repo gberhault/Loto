@@ -2,7 +2,7 @@
 <resources>
     <string name="ok">OK</string>
     <string name="delete">Delete</string>
-    <string name="loto">Bingo</string>
+    <string name="loto">Loto</string>
     <string name="new_game">New Game</string>
     <string name="tools">Tools</string>
     <string name="help">Help</string>
