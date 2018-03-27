@@ -15,7 +15,6 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -36,7 +35,7 @@ public class MainActivity extends AppCompatActivity
     public static final String DRAWN_NUMBERS = "DRAWN_NUMBERS";
     private final int buttonWidthdp = 50;
     private String minStr = "1";
-    private String maxStr = "89";
+    private String maxStr = "90";
     private int buttonWidthPixel;
     private Button validateCurrentCartonBtn;
     private NumberPicker numberPicker;
@@ -84,27 +83,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main2, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.main, menu);
+//        return true;
+//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -256,8 +240,8 @@ public class MainActivity extends AppCompatActivity
         textView_drawnNumbers = findViewById(R.id.dn);
 
         numberPicker = findViewById(R.id.numpicker);
-        numberPicker.setMinValue(1);
-        numberPicker.setMaxValue(89);
+        numberPicker.setMinValue(Integer.valueOf(minStr));
+        numberPicker.setMaxValue(Integer.valueOf(maxStr));
 
         cartonsStatusTV = findViewById(R.id.cartonsStatusTV);
 
